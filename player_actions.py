@@ -16,6 +16,9 @@ class Player(object):
         self.l_leg = 100
         self.r_leg = 100
 
+        self.inventory = []
+        self.money = 5
+
     def limb_check(self):
         return
 
@@ -34,7 +37,7 @@ class Player(object):
             key=key.replace("'","")
             key=key.replace("'","")
 
-            if key == "y":
+            if key.lower() == "y":
                 quit()
             else:
                 return

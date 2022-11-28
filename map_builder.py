@@ -8,7 +8,7 @@ class Cell(object):
         self.xpos = x
         self.ypos = y
         self.item_at = item_at
-        # we use for only in vault_updater, just holds while player is over object
+        # We use for only in vault_updater, just holds while player is over object
         self.second_holder = second_holder
 
 # For building normal vaults, adds in all the cells with empty item_at attributes
@@ -94,6 +94,7 @@ def vault_shower(vault):
         print(Fore.CYAN + Back.CYAN + " ", end="")
         holder = ""
         for item in line:
+            # All the items in each line
             if item.item_at != None:
                 if "Trap" in str(type(item.item_at)):
                     if item.item_at.is_hidden == True:
