@@ -48,7 +48,7 @@ def vault_updater(vault, to_move, dir):
                         to_move.ypos -= 1
                         vault[to_move.ypos][count].item_at = to_move
                     else:
-                        vault[to_move.ypos - 1][count].item_at.interacted()
+                        vault[to_move.ypos - 1][count].item_at.interacted(to_move)
                     return vault
         elif dir == "s":
             for count, item in enumerate(vault[to_move.ypos]):
@@ -58,7 +58,7 @@ def vault_updater(vault, to_move, dir):
                         to_move.ypos += 1
                         vault[to_move.ypos][count].item_at = to_move
                     else:
-                        vault[to_move.ypos + 1][count].item_at.interacted()
+                        vault[to_move.ypos + 1][count].item_at.interacted(to_move)
                     return vault
 
     # Horizontal
@@ -71,7 +71,7 @@ def vault_updater(vault, to_move, dir):
                         to_move.xpos += 1
                         vault[to_move.ypos][count + 1].item_at = to_move
                     else:
-                        vault[to_move.ypos][count + 1].item_at.interacted()
+                        vault[to_move.ypos][count + 1].item_at.interacted(to_move)
                     return vault
                 elif dir == "a":
                     if vault[to_move.ypos][count - 1].item_at == None:
@@ -79,7 +79,7 @@ def vault_updater(vault, to_move, dir):
                         to_move.xpos -= 1
                         vault[to_move.ypos][count - 1].item_at = to_move
                     else:
-                        vault[to_move.ypos][count - 1].item_at.interacted()
+                        vault[to_move.ypos][count - 1].item_at.interacted(to_move)
                     return vault
 
 # Shows vault, ran once after each update
@@ -91,14 +91,21 @@ def vault_shower(vault):
 
     print(Fore.CYAN + Back.CYAN + " " * (2 + longest))
     for count, line in enumerate(vault):
+        print(Fore.CYAN + Back.CYAN + " ", end="")
         holder = ""
         for item in line:
             if item.item_at != None:
-                holder += item.item_at.icon
+                if "Trap" in str(type(item.item_at)):
+                    if item.item_at.is_hidden == True:
+                        holder += " "
+                    else:
+                        holder += Fore.RED + item.item_at.icon 
+                elif "Player" in str(type(item.item_at)):
+                    holder += Fore.YELLOW + item.item_at.icon
+                else:
+                    holder += Fore.WHITE + item.item_at.icon
             else:
-                # empty cells
                 holder += " "
-        print(Fore.CYAN + Back.CYAN + " ", end="")
         print(holder, end="")
         print(Fore.CYAN + Back.CYAN + (" " * (1 + longest - len(line))))
     print(Fore.CYAN + Back.CYAN + " " * (2 + longest))

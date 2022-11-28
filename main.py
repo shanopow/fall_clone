@@ -2,6 +2,7 @@
 from map_builder import *
 from player_actions import *
 from npc_actions import *
+from world_actions import *
 
 # Module imports
 from os import system, name
@@ -34,9 +35,11 @@ print("\033[2J")
 # need to hold icons along with id in dict so we can reference them quickly
 # when dialogue expanded, move to seperate method as will dynamically change through interaction
 test_vault = norm_builder(holdy)    
-guide = Npc("The Guide", 4, 1, True, "passive", "*", 1, ["Hello, this is dummy text", "This is the second line"])
+guide = Npc("The Guide", 4, 1, True, "passive", "Gy ", 1, ["Hello, this is dummy text", "This is the second line"])
 guard = Npc("Guard", 2, 2, False, "neutral", "1", 2)
-vault_details = [dweller, guide, guard]
+
+spiky = Trap("Spike Trap", 8, 3, 10, "S", 10, True)
+vault_details = [dweller, guide, guard, spiky]
 vault_sprinkler(vault_details, test_vault)
 
 while True:
