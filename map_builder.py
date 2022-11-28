@@ -41,23 +41,25 @@ def vault_updater(vault, to_move, dir):
     # Vertical
     if dir in "ws":
         if dir == "w":
-            # These +1s on the ypos make no sense, dont know why work
-            for count, item in enumerate(vault[to_move.ypos + 1]):
+            for count, item in enumerate(vault[to_move.ypos]):
                 if item.item_at == to_move:
-                    # we lose the old item in next line as we overwrite it here
-                    if vault[to_move.ypos][count].item_at == None:
+                    if vault[to_move.ypos - 1][count].item_at == None:
                         item.item_at = None
+                        to_move.ypos -= 1
                         vault[to_move.ypos][count].item_at = to_move
                     else:
-                        vault[to_move.ypos][count].item_at.interacted("talk")
+                        vault[to_move.ypos - 1][count].item_at.interacted()
+                    return vault
         elif dir == "s":
-            for count, item in enumerate(vault[to_move.ypos - 1]):
+            for count, item in enumerate(vault[to_move.ypos]):
                 if item.item_at == to_move:
-                    if vault[to_move.ypos][count].item_at == None:
+                    if vault[to_move.ypos + 1][count].item_at == None:
                         item.item_at = None
+                        to_move.ypos += 1
                         vault[to_move.ypos][count].item_at = to_move
                     else:
-                        vault[to_move.ypos][count].item_at.interacted("talk")
+                        vault[to_move.ypos + 1][count].item_at.interacted()
+                    return vault
 
     # Horizontal
     elif dir in "ad":
@@ -66,22 +68,23 @@ def vault_updater(vault, to_move, dir):
                 if dir == "d":
                     if vault[to_move.ypos][count + 1].item_at == None: 
                         item.item_at = None
+                        to_move.xpos += 1
                         vault[to_move.ypos][count + 1].item_at = to_move
                     else:
-                        vault[to_move.ypos][count + 1].item_at.interacted("talk")
+                        vault[to_move.ypos][count + 1].item_at.interacted()
+                    return vault
                 elif dir == "a":
                     if vault[to_move.ypos][count - 1].item_at == None:
                         item.item_at = None
+                        to_move.xpos -= 1
                         vault[to_move.ypos][count - 1].item_at = to_move
                     else:
-                        vault[to_move.ypos][count - 1].item_at.interacted("talk")
-                return vault
-        return vault
+                        vault[to_move.ypos][count - 1].item_at.interacted()
+                    return vault
 
 # Shows vault, ran once after each update
 def vault_shower(vault):
     longest = 0
-    print(type(vault))
     for line in vault:
         if len(line) > longest:
             longest = len(line)

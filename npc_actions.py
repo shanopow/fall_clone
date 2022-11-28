@@ -9,7 +9,10 @@ class Npc(object):
         self.id = id
         self.dialogue = dialogue
 
-    def interacted(self, interaction_type):
+    def interacted(self):
+        print("You are interacting with", self.name)
+        print("Use talk, etc")
+        interaction_type = input() 
         if interaction_type == "talk":
             for item in self.dialogue:
                 print(item)
