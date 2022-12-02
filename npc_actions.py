@@ -32,7 +32,7 @@ class Npc(object):
             # This will be percentage based in future
             print("Success!")
             print("You stole an apple!")
-            dweller.inv.append("apple")
+            dweller.inventory.append("apple")
             a = input()
         elif interaction_type == "trade" and self.npc_type == "trader":
             print(Fore.BLUE + "See my wares!")

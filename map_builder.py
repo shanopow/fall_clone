@@ -8,7 +8,7 @@ class Cell(object):
         self.xpos = x
         self.ypos = y
         self.item_at = item_at
-        # We use for only in vault_updater, just holds while player is over object
+        # We use for only in vault_updater, is a holder attribute for the player and other objects to layer
         self.second_holder = second_holder
 
 # For building normal vaults, adds in all the cells with empty item_at attributes
@@ -37,6 +37,7 @@ def vault_sprinkler(details, vault):
                 slot.item_at = item
 
 # Should be ran when wants to move something, mainly a player object in array
+# In future, should make projectile function a separate object than this function
 def vault_updater(vault, to_move, dir):
     # Vertical
     if dir in "ws":

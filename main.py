@@ -40,7 +40,14 @@ death_item = Trap("Trap of Doom", 10, 1, 100 ,"P", 1, False)
 vault_details = [dweller, guide, trader, guard, spiky, death_item]
 vault_sprinkler(vault_details, test_vault)
 
-print("\033[2J")
+print("Choose the type of clearing")
+print("cls / other")
+a = input()
+if a == "cls":
+    system('cls')
+else:
+    print("\033[2J")
+
 while True:
     vault_shower(test_vault)
     key = getch()
@@ -49,9 +56,10 @@ while True:
     key = key.replace("'", "")
     key = key.replace("'", "")
 
-    # Test, move one to right then redraw
     could_move = dweller.move_choice(key, test_vault)
     if could_move:
         test_vault = vault_updater(test_vault, dweller, key)
-    time.sleep(0.03)
-    print("\033[2J")
+    if a == "cls":
+        system('cls')
+    else:
+        print("\033[2J")
