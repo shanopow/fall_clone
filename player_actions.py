@@ -1,6 +1,6 @@
 from getch import getch
 class Player(object):
-    def __init__(self, name, health, xp, rads, xpos, ypos, icon):
+    def __init__(self, name, health, xp, rads, xpos, ypos, icon, form_id):
         # Basic
         self.name = name
         self.health = health
@@ -9,6 +9,7 @@ class Player(object):
         self.xpos = xpos
         self.ypos = ypos
         self.icon = icon
+        self.form_id = form_id
         # Limbs
         self.head = 100
         self.l_arm = 100

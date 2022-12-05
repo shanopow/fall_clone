@@ -2,23 +2,21 @@ from colorama import init, Fore, Back, Style
 init(autoreset=True)
 
 class Npc(object):
-    def __init__(holder):
+    def __init__(self, holder):
         self.name = holder[0]
         self.xpos = holder[1]
-            self.ypos = holder[2]
-        self.aggression = holder[3]
-        self.icon = holder[4]
-        self.npc_type = holder[5]
-        
-        if self.dialogue != " ":
-            self.dialogue = holder[6]
+        self.ypos = holder[2]
+        if holder[3] == "1":
+            self.aggression = True
         else:
-            self.dialogue = []
-        
-        if inventory != " ":
-            self.inventory = holder[8]
-        else:
-            self.inventory = []
+            self.aggression = False
+
+        self.npc_type = holder[4]
+        self.icon = holder[5]
+        self.dialogue = holder[6]
+        self.npc_type = holder[7]
+        self.inventory = holder[8]
+        self.form_id = holder[9]
 
     def interacted(self, dweller):
         print("You are interacting with", self.name)
@@ -28,21 +26,32 @@ class Npc(object):
         interaction_type = input()
         interaction_type = interaction_type.lower() 
         if interaction_type == "talk":
+            self.talk()
+            a = input()
+        
+        elif interaction_type == "steal":
+            self.steal(dweller)
+            a = input()
+        
+        elif interaction_type == "trade" and self.npc_type == "trader":
+            self.trade(dweller)
+            a = input()
+        
+    def talk(self):
+        if self.dialogue == []:
+            print("I have nothing to say to you")
+        else:
             for item in self.dialogue:
                 print(item)
-            a = input()
-        elif interaction_type == "steal":
-            # This will be percentage based in future
-            print("Success!")
-            print("You stole an apple!")
-            dweller.inventory.append("apple")
-            a = input()
-        elif interaction_type == "trade" and self.npc_type == "trader":
-            print(Fore.BLUE + "See my wares!")
-            self.transaction(dweller)
-            a = input()
-    
-    def transaction(self, dweller):
+
+    def steal(self, dweller):
+        # This will be percentage based in future
+        print("Success!")
+        print("You stole an apple!")
+        dweller.inventory.append("apple")
+
+    def trade(self, dweller):
+        print(Fore.BLUE + "See my wares!")
         for item in self.inventory:
             print("{} : {}".format(item, self.inventory[item]))
         print("Please choose one:")

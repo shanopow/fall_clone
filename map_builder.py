@@ -31,10 +31,10 @@ def norm_builder(dims):
 # Sprinkles objects onto the vault cells, replacing the none types on their item_at attribute with the new object
 # Use once, directly after norm_builder
 def vault_sprinkler(details, vault):
-    for item in details:
-        for slot in vault[item.ypos]:
-            if slot.xpos == item.xpos:
-                slot.item_at = item
+        for item in details.values():
+            for slot in vault[item.ypos]:
+                if slot.xpos == item.xpos:
+                    slot.item_at = item
 
 # Should be ran when wants to move something, mainly a player object in array
 # In future, should make projectile function a separate object than this function

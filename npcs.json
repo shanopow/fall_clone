@@ -1,0 +1,7 @@
+{
+    "npcs": [
+        ["The Guide", 4, 1, "1", "passive", "G", ["Hello, this is dummy text", "This is the second line"], "normal", [], "n1"],
+        ["Guard", 2, 2, "0", "neutral", "1", [], "guard", [], "n2"],
+        ["Trader Joe", 4, 2, "1", "passive", "R", ["Welcome Sir!", "I have the lowest prices around."], "trader", {"apple": 4, "banana": 3, "plum": 6}, "n3"]
+    ]
+}

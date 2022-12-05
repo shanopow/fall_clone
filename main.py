@@ -3,15 +3,19 @@ from map_builder import *
 from player_actions import *
 from npc_actions import *
 from world_actions import *
+from json_handler import *
 
 # Module imports
 from os import system, name
 from colorama import init, Fore, Back, Style
 from getch import getch
+
+import random
 import ctypes
 import time
 import sys
-from random import *
+import json
+import copy
 
 # Colorama
 init(autoreset=True)
@@ -22,30 +26,29 @@ SW_MAXIMISE = 3
 hWnd = user32.GetForegroundWindow()
 user32.ShowWindow(hWnd, SW_MAXIMISE)
 
-# Where the fun begins
-# Initials
-dweller = Player("Shane", 100, 0, 0, 0, 0, "x")
+# This will need to be a json later
 holdy = [50, 50, 50, 40, 10, 30]
+test_vault = norm_builder(holdy)
 
 # FOR FIXES RELATED TO ID
 # NEED TWO ID TYPES, BASE ID AND REF ID
 # BASE ID IS FOR THE GENERIC TEMPLATE, IE ALL "APPLE" HAVE SAME BASE ID
 # REF ID IS FOR EACH INDIVIDUAL OBJECT, IE ALL "APPLE" HAVE DIFFERENT REF ID
-# BOTH SHOULD BE ASSIGNED AUTOMATICALLY BY THE GENERATOR FOR OBJECTS, NEVER HARD SET SO CAN ADD AS MANY AS WANT WITHOUT OVERLAP
-# FOR REF ID, IF NOT PRE_LOADED ITEM, THEN DYNAMICALLY ALLOCATE IT A REF_ID WITH STARTING CHARS "FF", WE CAN THEN EASILY CHECK IF WAS DYNAMICALLY GENERATED
+# REF ID MADE AFTER EACH DEEPCOPY, STICKS WITH THAT ONE ITEM THEN
 
-# when dialogue expanded, move to seperate method as will dynamically change through interaction
-test_vault = norm_builder(holdy)
-guide = Npc("The Guide", 4, 1, True, "passive", "G", ["Hello, this is dummy text", "This is the second line"])
-guard = Npc("Guard", 2, 2, False, "neutral", "1")
-trader = Npc("Trader Joe", 4, 2, True, "passive", "R", ["Welcome Sir!", "I have the lowest prices around."], "trader", {"apple": 4, "banana": 3, "plum": 6})
+# Reading from the json files
+# mega_list holds each possible object in the game
+# index based on form_id
+# should be no dupes here at all
+traps = object_builder("traps.json", "__main__.Trap", "traps")
+npcs = object_builder("npcs.json", "__main__.Npc", "npcs")
+dweller = Player("Shane", 100, 0, 0, 0, 0, "x", "p1")
+npcs.append(dweller)
+mega_list = final_object_builder(traps + npcs)
 
-# ID is last int here
-# ID is kind of pointless, maybe make id system like fnv? Investigate further
-spiky = Trap("Spike Trap", 8, 3, 10, "S", 10, True)
-death_item = Trap("Trap of Doom", 10, 1, 100 ,"P", 1, False)
-vault_details = [dweller, guide, trader, guard, spiky, death_item]
-vault_sprinkler(vault_details, test_vault)
+first_room = populater(["t1", "t2", "n1", "n2", "n3"], mega_list)
+first_room[0] = dweller
+vault_sprinkler(first_room, test_vault)
 
 print("Choose the type of clearing")
 print("cls / other")
