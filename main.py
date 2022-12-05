@@ -1,3 +1,4 @@
+# Not all here are needed, this is to keep track of all nded modules across entre program
 # File imports
 from map_builder import *
 from player_actions import *
@@ -21,20 +22,12 @@ import copy
 init(autoreset=True)
 
 # Fullscreen
-user32 = ctypes.WinDLL('user32')
-SW_MAXIMISE = 3
-hWnd = user32.GetForegroundWindow()
-user32.ShowWindow(hWnd, SW_MAXIMISE)
-
-# This will need to be a json later
-holdy = [50, 50, 50, 40, 10, 30]
-test_vault = norm_builder(holdy)
-
-# FOR FIXES RELATED TO ID
-# NEED TWO ID TYPES, BASE ID AND REF ID
-# BASE ID IS FOR THE GENERIC TEMPLATE, IE ALL "APPLE" HAVE SAME BASE ID
-# REF ID IS FOR EACH INDIVIDUAL OBJECT, IE ALL "APPLE" HAVE DIFFERENT REF ID
-# REF ID MADE AFTER EACH DEEPCOPY, STICKS WITH THAT ONE ITEM THEN
+win_lin = input("win or lin?")
+if win_lin == "win":
+    user32 = ctypes.WinDLL('user32')
+    SW_MAXIMISE = 3
+    hWnd = user32.GetForegroundWindow()
+    user32.ShowWindow(hWnd, SW_MAXIMISE)
 
 # Reading from the json files
 # mega_list holds each possible object in the game
@@ -48,7 +41,12 @@ mega_list = final_object_builder(traps + npcs)
 
 first_room = populater(["t1", "t2", "n1", "n2", "n3"], mega_list)
 first_room[0] = dweller
+
+# test
+chosen = map_maker("maps.json", "first_map")
+test_vault = norm_builder(chosen)
 vault_sprinkler(first_room, test_vault)
+
 
 print("Choose the type of clearing")
 print("cls / other")

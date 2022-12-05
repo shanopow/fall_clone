@@ -51,21 +51,30 @@ class Player(object):
                     for item in vault[self.ypos - 1]:
                         count.append(item.xpos)
                     if self.xpos in count:
-                        return True
+                        if vault[self.ypos - 1][self.xpos].icon == " ":
+                            return True
+                        else:
+                            return False
             elif mdir == "s":
                 # Above bottom, xpos exist for current and below
                 if self.ypos < len(vault) - 1:
                     for item in vault[self.ypos + 1]:
                         count.append(item.xpos)
                     if self.xpos in count:
-                        return True
+                        if vault[self.ypos + 1][self.xpos].icon == " ":
+                            return True
+                        else:
+                            return False
             # left, right
             elif mdir == "a":
                 if self.xpos > 0:
-                    return True
+                    if vault[self.ypos][self.xpos - 1].icon == " ":
+                        return True
+
             elif mdir == "d":
                 if self.xpos < len(vault[self.ypos]) - 1:
-                    return True
+                    if vault[self.ypos][self.xpos + 1].icon == " ":
+                        return True
             return False
 
     def over_item(self):

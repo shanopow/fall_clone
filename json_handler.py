@@ -1,4 +1,4 @@
-# This file is responsible for reading in from our json file and building our objects
+# This file is responsible for reading in from our json file and building our objects or maps
 import json
 
 def file_reader(file_name):
@@ -6,6 +6,18 @@ def file_reader(file_name):
     raw_data = json.load(f)
     f.close()
     return raw_data
+
+# reads in every map in the json, keeps them seperated
+# only chooses one it wants
+def map_maker(file_name, chosen):
+    to_build = []
+    data = file_reader(file_name)
+    for item in data:
+        if item == chosen:
+            return data[chosen]
+    print("Could not find this map, exiting now")
+    quit()
+
 
 # for converting name of class in str to actual class, used in normal object builder, DO NOT USE ALONE
 def get_class(kls):

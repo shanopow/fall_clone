@@ -4,24 +4,28 @@ import ctypes
 import random
 
 class Cell(object):
-    def __init__(self, y, x, item_at, second_holder=None):
+    def __init__(self, y, x, icon, item_at, second_holder=None):
         self.xpos = x
         self.ypos = y
         self.item_at = item_at
+        self.icon = icon
         # We use for only in vault_updater, is a holder attribute for the player and other objects to layer
         self.second_holder = second_holder
 
 # For building normal vaults, adds in all the cells with empty item_at attributes
 def norm_builder(dims):
-    weights_holder = [10,1]
-    choices_holder = [0,1]
     new_map = []
     i = 0
-    while i < len(dims):
+    for line in dims:
         new_line = []
         j = 0
-        while j < dims[i]:
-            new_cell = Cell(i, j, None)
+        for spot in line:
+            if spot == 1:
+                # Walls
+                # █
+                new_cell = Cell(i, j, " ", None)
+            else:
+                new_cell = Cell(i, j, "█", None)
             new_line.append(new_cell)
             j += 1
         new_map.append(new_line)
@@ -35,6 +39,7 @@ def vault_sprinkler(details, vault):
             for slot in vault[item.ypos]:
                 if slot.xpos == item.xpos:
                     slot.item_at = item
+                    break
 
 # Should be ran when wants to move something, mainly a player object in array
 # In future, should make projectile function a separate object than this function
@@ -107,7 +112,11 @@ def vault_shower(vault):
                 else:
                     holder += Fore.WHITE + item.item_at.icon
             else:
-                holder += " "
+                if item.icon != " ":
+                    # impassable
+                    holder += (Fore.CYAN + item.icon)
+                else:
+                    holder += item.icon
         print(holder, end="")
         print(Fore.CYAN + Back.CYAN + (" " * (1 + longest - len(line))))
     print(Fore.CYAN + Back.CYAN + " " * (2 + longest))
