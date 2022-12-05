@@ -2,18 +2,21 @@ from colorama import init, Fore, Back, Style
 init(autoreset=True)
 
 class Npc(object):
-    def __init__(self, name, xpos, ypos, has_dialogue, aggression, icon, id, dialogue=["I have no interesting dialogue", "Goodbye!"], npc_type="generic", inventory = None):
-        self.name = name
-        self.xpos = xpos
-        self.ypos = ypos
-        self.has_dialogue = has_dialogue
-        self.aggression = aggression
-        self.icon = icon
-        self.id = id
-        self.dialogue = dialogue
-        self.npc_type = npc_type
-        if inventory != None:
-            self.inventory = inventory
+    def __init__(holder):
+        self.name = holder[0]
+        self.xpos = holder[1]
+            self.ypos = holder[2]
+        self.aggression = holder[3]
+        self.icon = holder[4]
+        self.npc_type = holder[5]
+        
+        if self.dialogue != " ":
+            self.dialogue = holder[6]
+        else:
+            self.dialogue = []
+        
+        if inventory != " ":
+            self.inventory = holder[8]
         else:
             self.inventory = []
 
@@ -52,4 +55,4 @@ class Npc(object):
             else:
                 print(Fore.RED + "Sorry, but you dont have the coin!")
         else:
-            print(Fore.RED + "That item isn't in my inventory, sorry!")
+            print(Fore.RED + "That item isn't in my inventory, please try again")

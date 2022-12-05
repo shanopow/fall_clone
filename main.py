@@ -27,11 +27,18 @@ user32.ShowWindow(hWnd, SW_MAXIMISE)
 dweller = Player("Shane", 100, 0, 0, 0, 0, "x")
 holdy = [50, 50, 50, 40, 10, 30]
 
+# FOR FIXES RELATED TO ID
+# NEED TWO ID TYPES, BASE ID AND REF ID
+# BASE ID IS FOR THE GENERIC TEMPLATE, IE ALL "APPLE" HAVE SAME BASE ID
+# REF ID IS FOR EACH INDIVIDUAL OBJECT, IE ALL "APPLE" HAVE DIFFERENT REF ID
+# BOTH SHOULD BE ASSIGNED AUTOMATICALLY BY THE GENERATOR FOR OBJECTS, NEVER HARD SET SO CAN ADD AS MANY AS WANT WITHOUT OVERLAP
+# FOR REF ID, IF NOT PRE_LOADED ITEM, THEN DYNAMICALLY ALLOCATE IT A REF_ID WITH STARTING CHARS "FF", WE CAN THEN EASILY CHECK IF WAS DYNAMICALLY GENERATED
+
 # when dialogue expanded, move to seperate method as will dynamically change through interaction
-test_vault = norm_builder(holdy)    
-guide = Npc("The Guide", 4, 1, True, "passive", "G", 1, ["Hello, this is dummy text", "This is the second line"])
-guard = Npc("Guard", 2, 2, False, "neutral", "1", 2)
-trader = Npc("Trader Joe", 4, 2, True, "passive", "R", 3, ["Arrg, I be a pirate", "Rats"], "trader", {"apple": 4, "banana": 3, "plum": 6})
+test_vault = norm_builder(holdy)
+guide = Npc("The Guide", 4, 1, True, "passive", "G", ["Hello, this is dummy text", "This is the second line"])
+guard = Npc("Guard", 2, 2, False, "neutral", "1")
+trader = Npc("Trader Joe", 4, 2, True, "passive", "R", ["Welcome Sir!", "I have the lowest prices around."], "trader", {"apple": 4, "banana": 3, "plum": 6})
 
 # ID is last int here
 # ID is kind of pointless, maybe make id system like fnv? Investigate further
