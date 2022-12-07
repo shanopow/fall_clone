@@ -23,7 +23,7 @@ class Npc(object):
     def interacted(self, dweller):
         print("You are interacting with", self.name)
         print("Use talk, steal, etc")
-        if self.npc_type == "trader":
+        if "trader" in self.npc_type:
             print(Fore.GREEN + "You can also trade with this person")
         interaction_type = input()
         interaction_type = interaction_type.lower() 
@@ -67,3 +67,14 @@ class Npc(object):
                 print(Fore.RED + "Sorry, but you dont have the coin!")
         else:
             print(Fore.RED + "That item isn't in my inventory, please try again")
+
+# always hostile, built for fighting, along with few other systems
+class Enemy(object):
+    def __init__(self, holder):
+        self.name = holder[0]
+        self.health = holder[1]
+        self.damage = holder[2]
+        self.rad_damage = holder[3]
+        self.sight = holder[4]
+        self.inventory = holder[5]
+        self.form_id = holder[6]

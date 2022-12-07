@@ -53,6 +53,10 @@ class Player(object):
                     if self.xpos in count:
                         if vault[self.ypos - 1][self.xpos].icon == " ":
                             return True
+                        elif vault[self.ypos - 1][self.xpos].icon == "D":
+                            vault[self.ypos - 1][self.xpos].item_at.interacted()
+                            return False
+                        
                         else:
                             return False
             elif mdir == "s":
@@ -63,6 +67,9 @@ class Player(object):
                     if self.xpos in count:
                         if vault[self.ypos + 1][self.xpos].icon == " ":
                             return True
+                        elif vault[self.ypos + 1][self.xpos].icon == "D":
+                            vault[self.ypos + 1][self.xpos].item_at.interacted()
+                            return False
                         else:
                             return False
             # left, right
@@ -70,11 +77,16 @@ class Player(object):
                 if self.xpos > 0:
                     if vault[self.ypos][self.xpos - 1].icon == " ":
                         return True
+                    elif vault[self.ypos][self.xpos - 1].icon == "D":
+                        vault[self.ypos][self.xpos - 1].item_at.interacted()
+                        
 
             elif mdir == "d":
                 if self.xpos < len(vault[self.ypos]) - 1:
                     if vault[self.ypos][self.xpos + 1].icon == " ":
                         return True
+                    elif vault[self.ypos][self.xpos + 1].icon == "D":
+                        vault[self.ypos][self.xpos + 1].item_at.interacted()
             return False
 
     def over_item(self):

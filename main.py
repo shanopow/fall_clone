@@ -1,3 +1,6 @@
+# JESSE WE NEED DOOR FOR ALL THE MAPS
+# MR WHITE YO THE DOORS CANT BE NNPCS MAYBE LINKED LIST?
+# MAYBE SPECIAL INTERACTION TYPE FOR NPC "DOOR "
 # Not all here are needed, this is to keep track of all nded modules across entre program
 # File imports
 from map_builder import *
@@ -35,16 +38,18 @@ if win_lin == "win":
 # should be no dupes here at all
 traps = object_builder("traps.json", "__main__.Trap", "traps")
 npcs = object_builder("npcs.json", "__main__.Npc", "npcs")
-dweller = Player("Shane", 100, 1, 2, 1, 0, "x", "p1")
+enemies = object_builder("enemies.json", "__main__.Enemy", "enemies")
+
+dweller = Player("Shane", 100, 1, 2, 1, 1, "x", "p1")
 npcs.append(dweller)
-mega_list = final_object_builder(traps + npcs)
+mega_list = final_object_builder(traps + npcs + enemies)
 
 # done for each room
 first_room = populater(["n1", "n2", "n2", "n3"], mega_list, ["44", "00", "20", "34"])
 first_room[0] = dweller
 
-chosen = map_maker("maps.json", "square_room")
-test_vault = norm_builder(chosen)
+chosen = map_maker("maps.json", "hallway")
+test_vault = norm_builder(chosen, ["square_room"])
 vault_sprinkler(first_room ,test_vault)
 
 print("Choose the type of clearing")

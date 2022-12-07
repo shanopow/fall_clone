@@ -3,6 +3,18 @@ from colorama import Fore, Back, Style
 import ctypes
 import random
 
+class Door(object):
+    def __init__(self, ypos, xpos, door_to):
+        self.ypos = ypos
+        self.xpos = xpos
+        self.door_to = door_to
+        self.icon = "D"
+    
+    def interacted(self):
+        print(self.door_to)
+        print("Move to new area")
+        quit()
+
 class Cell(object):
     def __init__(self, y, x, icon, item_at, second_holder=None):
         self.xpos = x
@@ -13,9 +25,10 @@ class Cell(object):
         self.second_holder = second_holder
 
 # For building normal vaults, adds in all the cells with empty item_at attributes
-def norm_builder(dims):
+def norm_builder(dims, connected_areas):
     new_map = []
     i = 0
+    door_count = 0
     for line in dims:
         new_line = []
         j = 0
@@ -24,6 +37,11 @@ def norm_builder(dims):
                 # Walls
                 # █
                 new_cell = Cell(i, j, " ", None)
+            elif spot == 3:
+                # door
+                door = Door(i,j, connected_areas[door_count])
+                new_cell = Cell(i,j, "D", door)
+                door_count += 1
             else:
                 new_cell = Cell(i, j, "█", None)
             new_line.append(new_cell)

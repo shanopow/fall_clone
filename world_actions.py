@@ -1,5 +1,5 @@
 # This file is to contain misc items that do not fit into any other files
-# This means things like traps, enemies, and gloabl events that have many effects
+# This means things like traps, enemies, and global events that have many effects
 # My ID allocator is here, maybe clean this up later?
 
 import copy
@@ -37,8 +37,7 @@ def populater(holder, form_list, pos_list):
             ref_id = random.randint(1, 1000)
             if ref_id not in deep_room:
                 deep_room[ref_id] = copy.deepcopy(form_list[item])
-                deep_room[ref_id].xpos = int(pos_list[count][0])
-                deep_room[ref_id].ypos = int(pos_list[count][1])
+                deep_room[ref_id].set_pos(int(pos_list[count][0]), int(pos_list[count][1]))
                 slotted = True
             i += 1
     return deep_room
