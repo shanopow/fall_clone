@@ -35,18 +35,17 @@ if win_lin == "win":
 # should be no dupes here at all
 traps = object_builder("traps.json", "__main__.Trap", "traps")
 npcs = object_builder("npcs.json", "__main__.Npc", "npcs")
-dweller = Player("Shane", 100, 0, 0, 0, 0, "x", "p1")
+dweller = Player("Shane", 100, 1, 2, 1, 0, "x", "p1")
 npcs.append(dweller)
 mega_list = final_object_builder(traps + npcs)
 
-first_room = populater(["t1", "t2", "n1", "n2", "n3"], mega_list)
+# done for each room
+first_room = populater(["n1", "n2", "n2", "n3"], mega_list, ["44", "00", "20", "34"])
 first_room[0] = dweller
 
-# test
-chosen = map_maker("maps.json", "first_map")
+chosen = map_maker("maps.json", "square_room")
 test_vault = norm_builder(chosen)
-vault_sprinkler(first_room, test_vault)
-
+vault_sprinkler(first_room ,test_vault)
 
 print("Choose the type of clearing")
 print("cls / other")

@@ -4,19 +4,21 @@ init(autoreset=True)
 class Npc(object):
     def __init__(self, holder):
         self.name = holder[0]
-        self.xpos = holder[1]
-        self.ypos = holder[2]
-        if holder[3] == "1":
+        if holder[1] == "1":
             self.aggression = True
         else:
             self.aggression = False
 
-        self.npc_type = holder[4]
-        self.icon = holder[5]
-        self.dialogue = holder[6]
-        self.npc_type = holder[7]
-        self.inventory = holder[8]
-        self.form_id = holder[9]
+        self.npc_type = holder[2]
+        self.icon = holder[3]
+        self.dialogue = holder[4]
+        self.npc_type = holder[5]
+        self.inventory = holder[6]
+        self.form_id = holder[7]
+
+    def set_pos(self, xpos, ypos):
+        self.xpos = xpos
+        self.ypos = ypos
 
     def interacted(self, dweller):
         print("You are interacting with", self.name)

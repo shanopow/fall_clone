@@ -9,6 +9,8 @@ def file_reader(file_name):
 
 # reads in every map in the json, keeps them seperated
 # only chooses one it wants
+# WANT THIS TO BE A MAP-STITCHER, TAKES ARRAY OF CHOICES THEN STITCHES THEM TOGETHER
+# WOULD BE COOL, MAYBE STINKY TO IMPLEMENT
 def map_maker(file_name, chosen):
     to_build = []
     data = file_reader(file_name)
