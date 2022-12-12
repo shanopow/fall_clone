@@ -1,5 +1,8 @@
 # This file is responsible for reading in from our json file and building our objects or maps
+# basically takes functions from map_builder and works with them here
 import json
+from map_builder import norm_builder, door_maker, vault_sprinkler
+from world_actions import populater
 
 def file_reader(file_name):
     f = open(file_name)
@@ -7,16 +10,25 @@ def file_reader(file_name):
     f.close()
     return raw_data
 
+def door_used():
+    return
 # reads in every map in the json, keeps them seperated
 # only chooses one it wants
-# WANT THIS TO BE A MAP-STITCHER, TAKES ARRAY OF CHOICES THEN STITCHES THEM TOGETHER
-# WOULD BE COOL, MAYBE STINKY TO IMPLEMENT
-def map_maker(file_name, chosen):
+def map_maker(file_name, chosen, object_list):
     to_build = []
     data = file_reader(file_name)
     for item in data:
         if item == chosen:
-            return data[chosen]
+            room = data[chosen]
+            # make dimensions here
+            start_room = norm_builder(room["dimensions"])        
+            # here we make list of items to sprinkle onto the map
+            # doors done seperately
+            details = []
+            details = populater(details, room["people"], object_list)
+            details = door_maker(details, room["doors"], start_room)
+            vault_sprinkler(details, start_room)
+            return start_room
     print("Could not find this map, exiting now")
     quit()
 
@@ -27,7 +39,7 @@ def get_class(kls):
     module = ".".join(parts[:-1])
     m = __import__(module)
     for comp in parts[1:]:
-        m = getattr(m, comp)            
+        m = getattr(m, comp)          
     return m
 
 # makes big list of all objects of same class

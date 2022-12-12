@@ -1,7 +1,8 @@
 # JESSE WE NEED DOOR FOR ALL THE MAPS
-# MR WHITE YO THE DOORS CANT BE NNPCS MAYBE LINKED LIST?
-# MAYBE SPECIAL INTERACTION TYPE FOR NPC "DOOR "
-# Not all here are needed, this is to keep track of all nded modules across entre program
+# MR WHITE YO THE DOORS CANT BE NPCS MAYBE LINKED LIST?
+# solved here, just make it a door object to put in ez
+# MAYBE SPECIAL INTERACTION TYPE FOR NPC "DOOR"
+# Not all here are needed, this is to keep track of all needed modules across entre program
 # File imports
 from map_builder import *
 from player_actions import *
@@ -41,16 +42,13 @@ npcs = object_builder("npcs.json", "__main__.Npc", "npcs")
 enemies = object_builder("enemies.json", "__main__.Enemy", "enemies")
 
 dweller = Player("Shane", 100, 1, 2, 1, 1, "x", "p1")
-npcs.append(dweller)
-mega_list = final_object_builder(traps + npcs + enemies)
+players = []
+players.append(dweller)
+mega_list = final_object_builder(traps + npcs + enemies + players)
+# hard-coded ends here
 
-# done for each room
-first_room = populater(["n1", "n2", "n2", "n3"], mega_list, ["44", "00", "20", "34"])
-first_room[0] = dweller
-
-chosen = map_maker("maps.json", "hallway")
-test_vault = norm_builder(chosen, ["square_room"])
-vault_sprinkler(first_room ,test_vault)
+start_room = map_maker("maps.json", "square_room", mega_list)
+start_room = player_placer(dweller, None, start_room)
 
 print("Choose the type of clearing")
 print("cls / other")
@@ -61,16 +59,21 @@ else:
     print("\033[2J")
 
 while True:
-    vault_shower(test_vault)
+    vault_shower(start_room)
     key = getch()
     key = str(key)
     key = key.replace("b", "")
     key = key.replace("'", "")
     key = key.replace("'", "")
 
-    could_move = dweller.move_choice(key, test_vault)
+    could_move = dweller.move_choice(key, start_room, mega_list)
     if could_move:
-        test_vault = vault_updater(test_vault, dweller, key)
+        tmp_room = start_room
+        start_room = vault_updater(start_room, dweller, key)
+        if "list" not in str(type(start_room)):
+            # door used
+            start_room = map_maker("maps.json",start_room.door_to, mega_list)
+
     if a == "cls":
         system('cls')
     else:

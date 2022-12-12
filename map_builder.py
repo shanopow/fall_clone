@@ -1,4 +1,5 @@
 # Module Imports
+
 from colorama import Fore, Back, Style
 import ctypes
 import random
@@ -9,12 +10,21 @@ class Door(object):
         self.xpos = xpos
         self.door_to = door_to
         self.icon = "D"
-    
-    def interacted(self):
-        print(self.door_to)
-        print("Move to new area")
-        quit()
+        self.direction = None
 
+    def direction_setter(self, map):
+        if self.ypos == 0:
+            self.direction = "w"
+            return
+        elif self.xpos == 0:
+            self.direction == "a"
+            return
+        elif self.ypos == len(map) - 1:
+            self.direction == "s"
+            return
+        else:
+            self.direction == "d"
+            return
 class Cell(object):
     def __init__(self, y, x, icon, item_at, second_holder=None):
         self.xpos = x
@@ -25,7 +35,7 @@ class Cell(object):
         self.second_holder = second_holder
 
 # For building normal vaults, adds in all the cells with empty item_at attributes
-def norm_builder(dims, connected_areas):
+def norm_builder(dims):
     new_map = []
     i = 0
     door_count = 0
@@ -37,11 +47,6 @@ def norm_builder(dims, connected_areas):
                 # Walls
                 # █
                 new_cell = Cell(i, j, " ", None)
-            elif spot == 3:
-                # door
-                door = Door(i,j, connected_areas[door_count])
-                new_cell = Cell(i,j, "D", door)
-                door_count += 1
             else:
                 new_cell = Cell(i, j, "█", None)
             new_line.append(new_cell)
@@ -50,14 +55,33 @@ def norm_builder(dims, connected_areas):
         i += 1
     return new_map
 
+# makes door objects
+# twin to vault_sprinkler
+def door_maker(details, doors, map_holder):
+    for item in doors:
+        new_door = Door(int(doors[item][0]), int(doors[item][1]), item)
+        new_door.direction_setter(map_holder)
+        details.append(new_door)
+    return details
+
 # Sprinkles objects onto the vault cells, replacing the none types on their item_at attribute with the new object
 # Use once, directly after norm_builder
 def vault_sprinkler(details, vault):
-        for item in details.values():
+        for item in details:
             for slot in vault[item.ypos]:
                 if slot.xpos == item.xpos:
                     slot.item_at = item
                     break
+
+# For placing the player onto the map, will be ran after each room generation
+def player_placer(player, door_used, room):
+    if door_used is None:
+        # just spawned
+        player.xpos = 0
+        player.ypos = 0
+        room[player.ypos][player.xpos].item_at = player
+        return room
+
 
 # Should be ran when wants to move something, mainly a player object in array
 # In future, should make projectile function a separate object than this function
@@ -71,8 +95,8 @@ def vault_updater(vault, to_move, dir):
                         item.item_at = None
                         to_move.ypos -= 1
                         vault[to_move.ypos][count].item_at = to_move
-                    else:
-                        vault[to_move.ypos - 1][count].item_at.interacted(to_move)
+                    elif vault[to_move.ypos - 1][count].item_at.icon == "D":
+                        return vault[to_move.ypos - 1][count].item_at
                     return vault
         elif dir == "s":
             for count, item in enumerate(vault[to_move.ypos]):
@@ -81,8 +105,8 @@ def vault_updater(vault, to_move, dir):
                         item.item_at = None
                         to_move.ypos += 1
                         vault[to_move.ypos][count].item_at = to_move
-                    else:
-                        vault[to_move.ypos + 1][count].item_at.interacted(to_move)
+                    elif vault[to_move.ypos + 1][count].item_at.icon == "D":
+                        return vault[to_move.ypos + 1][count].item_at
                     return vault
 
     # Horizontal
@@ -94,16 +118,16 @@ def vault_updater(vault, to_move, dir):
                         item.item_at = None
                         to_move.xpos += 1
                         vault[to_move.ypos][count + 1].item_at = to_move
-                    else:
-                        vault[to_move.ypos][count + 1].item_at.interacted(to_move)
+                    elif vault[to_move.ypos][count + 1].item_at.icon == "D":
+                        return vault[to_move.ypos][count + 1].item_at
                     return vault
                 elif dir == "a":
                     if vault[to_move.ypos][count - 1].item_at == None:
                         item.item_at = None
                         to_move.xpos -= 1
                         vault[to_move.ypos][count - 1].item_at = to_move
-                    else:
-                        vault[to_move.ypos][count - 1].item_at.interacted(to_move)
+                    elif vault[to_move.ypos][count - 1].item_at.icon == "D":
+                        return vault[to_move.ypos][count - 1].item_at
                     return vault
 
 # Shows vault, ran once after each update

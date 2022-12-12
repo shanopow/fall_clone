@@ -1,3 +1,5 @@
+
+from json_handler import map_maker
 from getch import getch
 class Player(object):
     def __init__(self, name, health, xp, rads, xpos, ypos, icon, form_id):
@@ -28,7 +30,7 @@ class Player(object):
         current_limb = getattr(self, limb)
         setattr(self, limb, current_limb - dam)
         
-    def move_choice(self, mdir, vault):
+    def move_choice(self, mdir, vault, object_list):
         # user wants to quit
         if mdir == "q":
             print('Do you want to quit? (Y\\N)')
@@ -53,10 +55,6 @@ class Player(object):
                     if self.xpos in count:
                         if vault[self.ypos - 1][self.xpos].icon == " ":
                             return True
-                        elif vault[self.ypos - 1][self.xpos].icon == "D":
-                            vault[self.ypos - 1][self.xpos].item_at.interacted()
-                            return False
-                        
                         else:
                             return False
             elif mdir == "s":
@@ -67,9 +65,6 @@ class Player(object):
                     if self.xpos in count:
                         if vault[self.ypos + 1][self.xpos].icon == " ":
                             return True
-                        elif vault[self.ypos + 1][self.xpos].icon == "D":
-                            vault[self.ypos + 1][self.xpos].item_at.interacted()
-                            return False
                         else:
                             return False
             # left, right
@@ -77,17 +72,12 @@ class Player(object):
                 if self.xpos > 0:
                     if vault[self.ypos][self.xpos - 1].icon == " ":
                         return True
-                    elif vault[self.ypos][self.xpos - 1].icon == "D":
-                        vault[self.ypos][self.xpos - 1].item_at.interacted()
-                        
-
+                    
             elif mdir == "d":
                 if self.xpos < len(vault[self.ypos]) - 1:
                     if vault[self.ypos][self.xpos + 1].icon == " ":
                         return True
-                    elif vault[self.ypos][self.xpos + 1].icon == "D":
-                        vault[self.ypos][self.xpos + 1].item_at.interacted()
-            return False
+                    return False
 
     def over_item(self):
         return

@@ -25,23 +25,13 @@ class Trap(object):
         a = input()
 
 # Function for making deepcopies needed to populate a single room
-def populater(holder, form_list, pos_list):
-    deep_room = {}
-    for count, item in enumerate(holder):
-        slotted = False
-        i = 0
-        while slotted is False:
-            if i > 100:
-                slotted = True
-            # pos 1 is always allocated to the player, as they always need a spot in room
-            ref_id = random.randint(1, 1000)
-            if ref_id not in deep_room:
-                deep_room[ref_id] = copy.deepcopy(form_list[item])
-                deep_room[ref_id].set_pos(int(pos_list[count][0]), int(pos_list[count][1]))
-                slotted = True
-            i += 1
-    return deep_room
-
+def populater(holder, to_merge, form_list):
+    for item in to_merge:
+        new_object = copy.deepcopy(form_list[item])
+        new_object.xpos = int(to_merge[item][0])
+        new_object.ypos = int(to_merge[item][1])
+        holder.append(new_object)
+    return holder
 # IDs
 # form_id run once at the start when we init each template, eg each ("Trader Joe") Npc
 def form_id_alloc(item, counter):
