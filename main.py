@@ -45,10 +45,10 @@ dweller = Player("Shane", 100, 1, 2, 1, 1, "x", "p1")
 players = []
 players.append(dweller)
 mega_list = final_object_builder(traps + npcs + enemies + players)
-# hard-coded ends here
 
-start_room = map_maker("maps.json", "square_room", mega_list)
-start_room = player_placer(dweller, None, start_room)
+# Initial room
+room = map_maker("maps.json", "square_room", mega_list)
+room = player_placer(dweller, None, room)
 
 print("Choose the type of clearing")
 print("cls / other")
@@ -58,21 +58,26 @@ if a == "cls":
 else:
     print("\033[2J")
 
+# hard-coded ends here
+
 while True:
-    vault_shower(start_room)
+    vault_shower(room)
     key = getch()
     key = str(key)
     key = key.replace("b", "")
     key = key.replace("'", "")
     key = key.replace("'", "")
 
-    could_move = dweller.move_choice(key, start_room, mega_list)
+    could_move = dweller.move_choice(key, room, mega_list)
     if could_move:
-        tmp_room = start_room
-        start_room = vault_updater(start_room, dweller, key)
-        if "list" not in str(type(start_room)):
+        # keep copy of old room if we need to use door
+        room = vault_updater(room, dweller, key)
+        if "list" not in str(type(room)):
             # door used
-            start_room = map_maker("maps.json",start_room.door_to, mega_list)
+            old_room = copy.deepcopy(room)
+            room = map_maker("maps.json", room.door_to, mega_list)
+            room = player_placer(dweller, old_room , room)
+            # this returns none-type, no idea why 
 
     if a == "cls":
         system('cls')

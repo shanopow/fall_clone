@@ -10,8 +10,6 @@ def file_reader(file_name):
     f.close()
     return raw_data
 
-def door_used():
-    return
 # reads in every map in the json, keeps them seperated
 # only chooses one it wants
 def map_maker(file_name, chosen, object_list):
@@ -26,7 +24,7 @@ def map_maker(file_name, chosen, object_list):
             # doors done seperately
             details = []
             details = populater(details, room["people"], object_list)
-            details = door_maker(details, room["doors"], start_room)
+            details = door_maker(details, room["doors"], start_room, chosen)
             vault_sprinkler(details, start_room)
             return start_room
     print("Could not find this map, exiting now")

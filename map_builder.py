@@ -5,26 +5,13 @@ import ctypes
 import random
 
 class Door(object):
-    def __init__(self, ypos, xpos, door_to):
-        self.ypos = ypos
+    def __init__(self, xpos, ypos, door_to, current_room):
         self.xpos = xpos
+        self.ypos = ypos
         self.door_to = door_to
         self.icon = "D"
-        self.direction = None
+        self.current_room = current_room
 
-    def direction_setter(self, map):
-        if self.ypos == 0:
-            self.direction = "w"
-            return
-        elif self.xpos == 0:
-            self.direction == "a"
-            return
-        elif self.ypos == len(map) - 1:
-            self.direction == "s"
-            return
-        else:
-            self.direction == "d"
-            return
 class Cell(object):
     def __init__(self, y, x, icon, item_at, second_holder=None):
         self.xpos = x
@@ -57,10 +44,9 @@ def norm_builder(dims):
 
 # makes door objects
 # twin to vault_sprinkler
-def door_maker(details, doors, map_holder):
+def door_maker(details, doors, map_holder, map_name):
     for item in doors:
-        new_door = Door(int(doors[item][0]), int(doors[item][1]), item)
-        new_door.direction_setter(map_holder)
+        new_door = Door(int(doors[item][0]), int(doors[item][1]), item, map_name)
         details.append(new_door)
     return details
 
@@ -74,14 +60,28 @@ def vault_sprinkler(details, vault):
                     break
 
 # For placing the player onto the map, will be ran after each room generation
-def player_placer(player, door_used, room):
-    if door_used is None:
+def player_placer(player, prev_room, room):
+    if prev_room is None:
         # just spawned
         player.xpos = 0
         player.ypos = 0
         room[player.ypos][player.xpos].item_at = player
         return room
-
+    else:
+        # used a door
+        for line in room:
+            for cell in line:
+                if cell.item_at is not None:
+                    if cell.item_at.icon == "D":
+                        if cell.item_at.door_to == prev_room.current_room:
+                            # found the door linked to prev room
+                            # now orient the player using the direction of door in the new room
+                            player.xpos = cell.xpos
+                            player.ypos = cell.ypos
+                            cell.second_holder = cell.item_at
+                            cell.item_at = player
+                            #room[player.ypos][player.xpos].item_at = player
+                            return room
 
 # Should be ran when wants to move something, mainly a player object in array
 # In future, should make projectile function a separate object than this function
@@ -91,21 +91,33 @@ def vault_updater(vault, to_move, dir):
         if dir == "w":
             for count, item in enumerate(vault[to_move.ypos]):
                 if item.item_at == to_move:
+                    if item.second_holder is not None:
+                        if item.second_holder.icon == "D":
+                            item.item_at = item.second_holder
+                            item.second_holder = None     
                     if vault[to_move.ypos - 1][count].item_at == None:
                         item.item_at = None
                         to_move.ypos -= 1
                         vault[to_move.ypos][count].item_at = to_move
+                        # was player over the door?
                     elif vault[to_move.ypos - 1][count].item_at.icon == "D":
+                        # door
                         return vault[to_move.ypos - 1][count].item_at
                     return vault
         elif dir == "s":
             for count, item in enumerate(vault[to_move.ypos]):
                 if item.item_at == to_move:
+                    if item.second_holder is not None:
+                        if item.second_holder.icon == "D":
+                            item.item_at = item.second_holder
+                            item.second_holder = None             
                     if vault[to_move.ypos + 1][count].item_at == None:
                         item.item_at = None
                         to_move.ypos += 1
                         vault[to_move.ypos][count].item_at = to_move
+                        # was player over the door?
                     elif vault[to_move.ypos + 1][count].item_at.icon == "D":
+                        # door
                         return vault[to_move.ypos + 1][count].item_at
                     return vault
 
@@ -114,22 +126,31 @@ def vault_updater(vault, to_move, dir):
         for count, item in enumerate(vault[to_move.ypos]):
             if item.item_at == to_move:
                 if dir == "d":
+                    if item.second_holder is not None:
+                        if item.second_holder.icon == "D":
+                            item.item_at = item.second_holder
+                            item.second_holder = None
                     if vault[to_move.ypos][count + 1].item_at == None: 
                         item.item_at = None
                         to_move.xpos += 1
                         vault[to_move.ypos][count + 1].item_at = to_move
                     elif vault[to_move.ypos][count + 1].item_at.icon == "D":
+                        # door
                         return vault[to_move.ypos][count + 1].item_at
                     return vault
                 elif dir == "a":
+                    if item.second_holder is not None:
+                        if item.second_holder.icon == "D":
+                            item.item_at = item.second_holder
+                            item.second_holder = None
                     if vault[to_move.ypos][count - 1].item_at == None:
                         item.item_at = None
                         to_move.xpos -= 1
                         vault[to_move.ypos][count - 1].item_at = to_move
                     elif vault[to_move.ypos][count - 1].item_at.icon == "D":
+                        # door
                         return vault[to_move.ypos][count - 1].item_at
                     return vault
-
 # Shows vault, ran once after each update
 def vault_shower(vault):
     longest = 0
