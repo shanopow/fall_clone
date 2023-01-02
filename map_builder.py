@@ -62,27 +62,29 @@ def vault_sprinkler(details, vault):
 # For placing the player onto the map, will be ran after each room generation
 def player_placer(player, prev_room, room):
     if prev_room is None:
-        # just spawned
+        # just spawned, ran once at creation
         player.xpos = 0
         player.ypos = 0
         room[player.ypos][player.xpos].item_at = player
         return room
+    
     else:
         # used a door
+        # going to look through each cell for the door to place the player at
         for line in room:
             for cell in line:
-                if cell.item_at is not None:
-                    if cell.item_at.icon == "D":
-                        if cell.item_at.door_to == prev_room.current_room:
-                            # found the door linked to prev room
-                            # now orient the player using the direction of door in the new room
-                            player.xpos = cell.xpos
-                            player.ypos = cell.ypos
-                            cell.second_holder = cell.item_at
-                            cell.item_at = player
-                            #room[player.ypos][player.xpos].item_at = player
-                            return room
+                if cell.item_at is not None and cell.item_at.icon == "D":
+                    # found the door in the room
+                    if cell.item_at.door_to == prev_room.current_room:
+                        # found the door linked to prev room
+                        # now orient the player using the direction of door in the new room
+                        player.xpos = cell.xpos
+                        player.ypos = cell.ypos
+                        cell.second_holder = cell.item_at
+                        cell.item_at = player
+                        return room
 
+# This needs to be refactored, way too much repitition and I removed npc interaction in here somewhere
 # Should be ran when wants to move something, mainly a player object in array
 # In future, should make projectile function a separate object than this function
 def vault_updater(vault, to_move, dir):
@@ -91,34 +93,42 @@ def vault_updater(vault, to_move, dir):
         if dir == "w":
             for count, item in enumerate(vault[to_move.ypos]):
                 if item.item_at == to_move:
-                    if item.second_holder is not None:
-                        if item.second_holder.icon == "D":
-                            item.item_at = item.second_holder
-                            item.second_holder = None     
                     if vault[to_move.ypos - 1][count].item_at == None:
-                        item.item_at = None
+                        # Normal movement of dweller
+                        if item.second_holder is not None:
+                            # If we are moving off of a door
+                            item.item_at = item.second_holder
+                            item.second_holder = None
+                        else:
+                            item.item_at = None
+                        
                         to_move.ypos -= 1
                         vault[to_move.ypos][count].item_at = to_move
-                        # was player over the door?
+                    
                     elif vault[to_move.ypos - 1][count].item_at.icon == "D":
-                        # door
+                        # Moving into a door here
                         return vault[to_move.ypos - 1][count].item_at
+                    
                     return vault
+        
         elif dir == "s":
             for count, item in enumerate(vault[to_move.ypos]):
                 if item.item_at == to_move:
-                    if item.second_holder is not None:
-                        if item.second_holder.icon == "D":
-                            item.item_at = item.second_holder
-                            item.second_holder = None             
                     if vault[to_move.ypos + 1][count].item_at == None:
-                        item.item_at = None
+                        if item.second_holder is not None:
+                            # If we are moving off of a door
+                            item.item_at = item.second_holder
+                            item.second_holder = None
+                        else:
+                            item.item_at = None
+                        
                         to_move.ypos += 1
                         vault[to_move.ypos][count].item_at = to_move
-                        # was player over the door?
+                    
                     elif vault[to_move.ypos + 1][count].item_at.icon == "D":
-                        # door
+                        # Moving into a door here
                         return vault[to_move.ypos + 1][count].item_at
+                    
                     return vault
 
     # Horizontal
@@ -126,30 +136,39 @@ def vault_updater(vault, to_move, dir):
         for count, item in enumerate(vault[to_move.ypos]):
             if item.item_at == to_move:
                 if dir == "d":
-                    if item.second_holder is not None:
-                        if item.second_holder.icon == "D":
+                    if vault[to_move.ypos][count + 1].item_at == None: 
+                        if item.second_holder is not None:
+                            # If we are moving off of a door
                             item.item_at = item.second_holder
                             item.second_holder = None
-                    if vault[to_move.ypos][count + 1].item_at == None: 
-                        item.item_at = None
+                        else:
+                            item.item_at = None
+                        
                         to_move.xpos += 1
                         vault[to_move.ypos][count + 1].item_at = to_move
+                    
                     elif vault[to_move.ypos][count + 1].item_at.icon == "D":
-                        # door
+                        # Moving into a door here
                         return vault[to_move.ypos][count + 1].item_at
+                    
                     return vault
+                
                 elif dir == "a":
-                    if item.second_holder is not None:
-                        if item.second_holder.icon == "D":
+                    if vault[to_move.ypos][count - 1].item_at == None:
+                        if item.second_holder is not None:
+                            # If we are moving off of a door
                             item.item_at = item.second_holder
                             item.second_holder = None
-                    if vault[to_move.ypos][count - 1].item_at == None:
-                        item.item_at = None
+                        else:
+                            item.item_at = None
+                        
                         to_move.xpos -= 1
                         vault[to_move.ypos][count - 1].item_at = to_move
+                    
                     elif vault[to_move.ypos][count - 1].item_at.icon == "D":
-                        # door
+                        # Moving into a door here
                         return vault[to_move.ypos][count - 1].item_at
+                    
                     return vault
 # Shows vault, ran once after each update
 def vault_shower(vault):

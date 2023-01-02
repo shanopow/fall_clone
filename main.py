@@ -76,8 +76,8 @@ while True:
             # door used
             old_room = copy.deepcopy(room)
             room = map_maker("maps.json", room.door_to, mega_list)
-            room = player_placer(dweller, old_room , room)
-            # this returns none-type, no idea why 
+            room = player_placer(dweller, old_room, room)
+            # this returns none-type, no idea why
 
     if a == "cls":
         system('cls')
