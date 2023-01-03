@@ -84,92 +84,56 @@ def player_placer(player, prev_room, room):
                         cell.item_at = player
                         return room
 
-# This needs to be refactored, way too much repitition and I removed npc interaction in here somewhere
+# Used in vault_updater for after direction has been determined 
+def move_calc(vault, to_move, xdir, ydir):
+    if vault[ydir][xdir].item_at == None:
+        # Normal movement
+        if vault[to_move.ypos][to_move.xpos].second_holder is not None:
+            # If we are moving off of a door
+            vault[to_move.ypos][to_move.xpos].item_at = vault[to_move.ypos][to_move.xpos].second_holder
+            vault[to_move.ypos][to_move.xpos].second_holder = None
+        else:
+            vault[to_move.ypos][to_move.xpos].item_at = None
+        
+        vault[ydir][xdir].item_at = to_move
+        to_move.ypos = ydir
+        to_move.xpos = xdir
+    
+    elif vault[ydir][xdir].item_at.icon == "D":
+        #Moving into a door here
+        return vault[ydir][xdir].item_at
+    else:
+        vault[ydir][xdir].item_at.interacted(to_move)
+        # Npcs go here
+
+    return vault
+
+
+# Uses move_calc above
 # Should be ran when wants to move something, mainly a player object in array
 # In future, should make projectile function a separate object than this function
 def vault_updater(vault, to_move, dir):
     # Vertical
     if dir in "ws":
         if dir == "w":
-            for count, item in enumerate(vault[to_move.ypos]):
-                if item.item_at == to_move:
-                    if vault[to_move.ypos - 1][count].item_at == None:
-                        # Normal movement of dweller
-                        if item.second_holder is not None:
-                            # If we are moving off of a door
-                            item.item_at = item.second_holder
-                            item.second_holder = None
-                        else:
-                            item.item_at = None
-                        
-                        to_move.ypos -= 1
-                        vault[to_move.ypos][count].item_at = to_move
-                    
-                    elif vault[to_move.ypos - 1][count].item_at.icon == "D":
-                        # Moving into a door here
-                        return vault[to_move.ypos - 1][count].item_at
-                    
-                    return vault
+            vault = move_calc(vault, to_move, to_move.xpos, to_move.ypos - 1)
+            return vault
         
         elif dir == "s":
-            for count, item in enumerate(vault[to_move.ypos]):
-                if item.item_at == to_move:
-                    if vault[to_move.ypos + 1][count].item_at == None:
-                        if item.second_holder is not None:
-                            # If we are moving off of a door
-                            item.item_at = item.second_holder
-                            item.second_holder = None
-                        else:
-                            item.item_at = None
-                        
-                        to_move.ypos += 1
-                        vault[to_move.ypos][count].item_at = to_move
-                    
-                    elif vault[to_move.ypos + 1][count].item_at.icon == "D":
-                        # Moving into a door here
-                        return vault[to_move.ypos + 1][count].item_at
-                    
-                    return vault
+            vault = move_calc(vault, to_move,to_move.xpos, to_move.ypos + 1)
+            return vault
 
     # Horizontal
     elif dir in "ad":
-        for count, item in enumerate(vault[to_move.ypos]):
-            if item.item_at == to_move:
-                if dir == "d":
-                    if vault[to_move.ypos][count + 1].item_at == None: 
-                        if item.second_holder is not None:
-                            # If we are moving off of a door
-                            item.item_at = item.second_holder
-                            item.second_holder = None
-                        else:
-                            item.item_at = None
-                        
-                        to_move.xpos += 1
-                        vault[to_move.ypos][count + 1].item_at = to_move
-                    
-                    elif vault[to_move.ypos][count + 1].item_at.icon == "D":
-                        # Moving into a door here
-                        return vault[to_move.ypos][count + 1].item_at
-                    
-                    return vault
+        if dir == "d":
+            vault = move_calc(vault, to_move, to_move.xpos + 1, to_move.ypos)
+            return vault
                 
-                elif dir == "a":
-                    if vault[to_move.ypos][count - 1].item_at == None:
-                        if item.second_holder is not None:
-                            # If we are moving off of a door
-                            item.item_at = item.second_holder
-                            item.second_holder = None
-                        else:
-                            item.item_at = None
-                        
-                        to_move.xpos -= 1
-                        vault[to_move.ypos][count - 1].item_at = to_move
-                    
-                    elif vault[to_move.ypos][count - 1].item_at.icon == "D":
-                        # Moving into a door here
-                        return vault[to_move.ypos][count - 1].item_at
-                    
-                    return vault
+        elif dir == "a":
+            vault = move_calc(vault, to_move,  to_move.xpos - 1, to_move.ypos)
+            return vault
+
+
 # Shows vault, ran once after each update
 def vault_shower(vault):
     longest = 0

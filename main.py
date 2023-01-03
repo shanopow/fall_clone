@@ -1,8 +1,5 @@
-# JESSE WE NEED DOOR FOR ALL THE MAPS
-# MR WHITE YO THE DOORS CANT BE NPCS MAYBE LINKED LIST?
-# solved here, just make it a door object to put in ez
-# MAYBE SPECIAL INTERACTION TYPE FOR NPC "DOOR"
 # Not all here are needed, this is to keep track of all needed modules across entre program
+
 # File imports
 from map_builder import *
 from player_actions import *
@@ -36,7 +33,7 @@ if win_lin == "win":
 # Reading from the json files
 # mega_list holds each possible object in the game
 # index based on form_id
-# should be no dupes here at all
+# should never be dupes here
 traps = object_builder("traps.json", "__main__.Trap", "traps")
 npcs = object_builder("npcs.json", "__main__.Npc", "npcs")
 enemies = object_builder("enemies.json", "__main__.Enemy", "enemies")
@@ -60,6 +57,7 @@ else:
 
 # hard-coded ends here
 
+# Core turn loop
 while True:
     vault_shower(room)
     key = getch()
@@ -77,7 +75,6 @@ while True:
             old_room = copy.deepcopy(room)
             room = map_maker("maps.json", room.door_to, mega_list)
             room = player_placer(dweller, old_room, room)
-            # this returns none-type, no idea why
 
     if a == "cls":
         system('cls')

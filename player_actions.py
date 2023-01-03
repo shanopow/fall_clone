@@ -30,6 +30,7 @@ class Player(object):
         current_limb = getattr(self, limb)
         setattr(self, limb, current_limb - dam)
         
+    # checks the validity of a a movement
     def move_choice(self, mdir, vault, object_list):
         # user wants to quit
         if mdir == "q":
