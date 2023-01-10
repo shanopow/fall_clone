@@ -27,9 +27,11 @@ class Trap(object):
 # Function for making deepcopies needed to populate a single room
 def populater(holder, to_merge, form_list):
     for item in to_merge:
-        new_object = copy.deepcopy(form_list[item])
-        new_object.xpos = int(to_merge[item][0])
-        new_object.ypos = int(to_merge[item][1])
+        new_object = copy.deepcopy(form_list[to_merge[item]])
+        
+        new_object.xpos = int(item.split(",")[0])
+        new_object.ypos = int(item.split(",")[1])
+        
         holder.append(new_object)
     return holder
 # IDs

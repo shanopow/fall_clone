@@ -4,27 +4,29 @@ init(autoreset=True)
 class Npc(object):
     def __init__(self, holder):
         self.name = holder[0]
-        if holder[1] == "1":
-            self.aggression = True
-        else:
-            self.aggression = False
-
-        self.npc_type = holder[2]
+        self.avail_options = holder[1]
+        self.can_fight = holder[2]
         self.icon = holder[3]
         self.dialogue = holder[4]
         self.npc_type = holder[5]
         self.inventory = holder[6]
         self.form_id = holder[7]
+        self.hp = holder[8]
+        self.weapon = holder[9]
 
     def set_pos(self, xpos, ypos):
         self.xpos = xpos
         self.ypos = ypos
 
     def interacted(self, dweller):
-        print("You are interacting with", self.name)
-        print("Use talk, steal, etc")
-        if "trader" in self.npc_type:
-            print(Fore.GREEN + "You can also trade with this person")
+        # intro
+        print(Fore.GREEN + "You are interacting with " +  self.name)
+        print(Fore.GREEN + "You can do the following:")
+        for each in self.avail_options:
+            print(each)
+        
+        # user input
+        # each option should be checker here as will break otherwise
         interaction_type = input()
         interaction_type = interaction_type.lower() 
         if interaction_type == "talk":

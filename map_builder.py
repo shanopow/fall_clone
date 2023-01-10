@@ -46,7 +46,7 @@ def norm_builder(dims):
 # twin to vault_sprinkler
 def door_maker(details, doors, map_holder, map_name):
     for item in doors:
-        new_door = Door(int(doors[item][0]), int(doors[item][1]), item, map_name)
+        new_door = Door(int(doors[item].split(",")[0]), int(doors[item].split(",")[1]), item, map_name)
         details.append(new_door)
     return details
 

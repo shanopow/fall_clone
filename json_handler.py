@@ -20,10 +20,11 @@ def map_maker(file_name, chosen, object_list):
             room = data[chosen]
             # make dimensions here
             start_room = norm_builder(room["dimensions"])        
+            
             # here we make list of items to sprinkle onto the map
-            # doors done seperately
             details = []
             details = populater(details, room["people"], object_list)
+            # add dorrs on
             details = door_maker(details, room["doors"], start_room, chosen)
             vault_sprinkler(details, start_room)
             return start_room
