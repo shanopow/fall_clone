@@ -79,3 +79,6 @@ class Player(object):
                     if vault[self.ypos][self.xpos + 1].icon == " ":
                         return True
                     return False
+    
+    def __str__(self):
+        return "Yourself"

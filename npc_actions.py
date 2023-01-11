@@ -40,7 +40,10 @@ class Npc(object):
         elif interaction_type == "trade" and self.npc_type == "trader":
             self.trade(dweller)
             a = input()
-        
+
+    def __str__(self):
+        return self.name
+
     def talk(self):
         if self.dialogue == []:
             print("I have nothing to say to you")

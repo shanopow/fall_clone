@@ -11,6 +11,9 @@ class Door(object):
         self.door_to = door_to
         self.icon = "D"
         self.current_room = current_room
+    
+    def __str__(self):
+        return ("Door to " + self.door_to)
 
 class Cell(object):
     def __init__(self, y, x, icon, item_at, second_holder=None):
@@ -20,6 +23,14 @@ class Cell(object):
         self.icon = icon
         # We use for only in vault_updater, is a holder attribute for the player and other objects to layer
         self.second_holder = second_holder
+
+def player_sight(vault):
+    print(Fore.GREEN + "You can see:")
+    for line in vault:
+        for cell in line:
+            if cell.item_at != None:
+                print(cell.item_at)
+        
 
 # For building normal vaults, adds in all the cells with empty item_at attributes
 def norm_builder(dims):

@@ -55,10 +55,13 @@ if a == "cls":
 else:
     print("\033[2J")
 
+just_entered = True
 # hard-coded ends here
 
 # Core turn loop
 while True:
+    if just_entered:
+        player_sight(room)
     vault_shower(room)
     key = getch()
     key = str(key)
@@ -72,9 +75,12 @@ while True:
         room = vault_updater(room, dweller, key)
         if "list" not in str(type(room)):
             # door used
+            just_entered = True
             old_room = copy.deepcopy(room)
             room = map_maker("maps.json", room.door_to, mega_list)
             room = player_placer(dweller, old_room, room)
+        else:
+            just_entered = False
 
     if a == "cls":
         system('cls')
