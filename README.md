@@ -12,10 +12,9 @@ A few little tasks I want to implement still.
 3. Add combat (Dependant on Enemies)
 4. Add enemies and associated systems (Highest Priority)
 5. Simply write more maps (Need to do eventually)
+6. Add weapons, armour (Just tedious)
 
 # Note
-This task has been made into two branches.
-Main is the normal project.
-The second branch is to test procedurally generating zones using some preset maps and then randomly populating with enemies, traps, loot etc.
-This is like a dungeon crawler system.
-Might be merged, maybe not.
+Direction on this is currenlty undecided.
+Might go towards procedurally generated or towards hardcoded, maybe both
+When this is resolved this message will no longer be here
