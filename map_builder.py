@@ -76,6 +76,7 @@ def player_placer(player, prev_room, room):
         # just spawned, ran once at creation
         player.xpos = 0
         player.ypos = 0
+        player.location = "????"
         room[player.ypos][player.xpos].item_at = player
         return room
     
@@ -86,6 +87,8 @@ def player_placer(player, prev_room, room):
             for cell in line:
                 if cell.item_at is not None and cell.item_at.icon == "D":
                     # found the door in the room
+                    # used its name to put the player location in the room too
+                    player.location = cell.item_at.current_room
                     if cell.item_at.door_to == prev_room.current_room:
                         # found the door linked to prev room
                         # now orient the player using the direction of door in the new room
@@ -146,12 +149,13 @@ def vault_updater(vault, to_move, dir):
 
 
 # Shows vault, ran once after each update
-def vault_shower(vault):
+def vault_shower(vault, player):
     longest = 0
     for line in vault:
         if len(line) > longest:
             longest = len(line)
 
+    print(Fore.RED + player.location)
     print(Fore.CYAN + Back.CYAN + " " * (2 + longest))
     for count, line in enumerate(vault):
         print(Fore.CYAN + Back.CYAN + " ", end="")

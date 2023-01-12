@@ -12,6 +12,7 @@ class Player(object):
         self.ypos = ypos
         self.icon = icon
         self.form_id = form_id
+        self.location = "????"
         # Limbs
         self.head = 100
         self.l_arm = 100

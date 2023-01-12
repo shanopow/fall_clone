@@ -4,6 +4,7 @@
 
 import copy
 import random
+from colorama import Fore, Back, Style
 
 class Trap(object):
     def __init__(self, holder):
@@ -23,6 +24,30 @@ class Trap(object):
         print("There was a {} on this tile!".format(self.name))
         print("You now have {} hp!".format(dweller.health))
         a = input()
+
+# Used as startup to main_acter
+def main_shower():
+    logo = [" ######    #    #       #                 #       ####### #     # #######  ", " #        # #   #       #           ####  #       #     # ##    # #       "," #       #   #  #       #          #    # #       #     # # #   # #        ", " #####  #     # #       #          #      #       #     # #  #  # #####    ", " #      ####### #       #          #      #       #     # #   # # #        ", " #      #     # #       #          #    # #       #     # #    ## #        ", " #      #     # ####### #######     ####  ####### ####### #     # #######  "]
+    for line in logo:
+        print(Fore.RED + line)
+    
+    print("\n" * 5)
+    print(Fore.GREEN + "Please choose an option below\n")
+    print("1: New game")
+    print("2: Load Game")
+    print("3: Quit")
+    user_choice = input()
+    return user_choice
+
+# interprets return value from main_shower on main_menu
+def main_acter():
+    user_input = main_shower()
+    if user_input == "1":
+        return
+    elif user_input == "2":
+        return
+    else:
+        quit()
 
 # Function for making deepcopies needed to populate a single room
 def populater(holder, to_merge, form_list):

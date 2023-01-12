@@ -67,6 +67,7 @@ class Npc(object):
             if dweller.money >= self.inventory[to_choose]:
                 dweller.money -= self.inventory[to_choose]
                 dweller.inventory.append(to_choose)
+                del self.inventory[to_choose]
                 print(Fore.GREEN + "Thank you for your business!")
             else:
                 print(Fore.RED + "Sorry, but you dont have the coin!")
