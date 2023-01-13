@@ -25,6 +25,15 @@ class Trap(object):
         print("You now have {} hp!".format(dweller.health))
         a = input()
 
+class Weapon(object):
+    def __init__(self, holder):
+        self.name = holder[0]
+        self.attack_type = holder[1]
+        self.damage = holder[2]
+        self.item_desc = holder[3]
+        self.weight = holder[4]
+        self.form_id = holder[5]
+
 # Used as startup to main_acter
 def main_shower():
     logo = [" ######    #    #       #                 #       ####### #     # #######  ", " #        # #   #       #           ####  #       #     # ##    # #       "," #       #   #  #       #          #    # #       #     # # #   # #        ", " #####  #     # #       #          #      #       #     # #  #  # #####    ", " #      ####### #       #          #      #       #     # #   # # #        ", " #      #     # #       #          #    # #       #     # #    ## #        ", " #      #     # ####### #######     ####  ####### ####### #     # #######  "]

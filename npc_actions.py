@@ -9,10 +9,11 @@ class Npc(object):
         self.icon = holder[3]
         self.dialogue = holder[4]
         self.npc_type = holder[5]
-        self.inventory = holder[6]
+        self.trade_inventory = holder[6]
         self.form_id = holder[7]
         self.hp = holder[8]
         self.weapon = holder[9]
+        self.inventory = holder[10]
 
     def set_pos(self, xpos, ypos):
         self.xpos = xpos
@@ -55,19 +56,19 @@ class Npc(object):
         # This will be percentage based in future
         print("Success!")
         print("You stole an apple!")
-        dweller.inventory.append("apple")
+        dweller.trade_inventory.append("apple")
 
     def trade(self, dweller):
         print(Fore.BLUE + "See my wares!")
-        for item in self.inventory:
-            print("{} : {}".format(item, self.inventory[item]))
+        for item in self.trade_inventory:
+            print("{} : {}".format(item, self.trade_inventory[item]))
         print("Please choose one:")
         to_choose = input()
-        if to_choose in self.inventory:
-            if dweller.money >= self.inventory[to_choose]:
-                dweller.money -= self.inventory[to_choose]
+        if to_choose in self.trade_inventory:
+            if dweller.money >= self.trade_inventory[to_choose]:
+                dweller.money -= self.trade_inventory[to_choose]
                 dweller.inventory.append(to_choose)
-                del self.inventory[to_choose]
+                del self.trade_inventory[to_choose]
                 print(Fore.GREEN + "Thank you for your business!")
             else:
                 print(Fore.RED + "Sorry, but you dont have the coin!")

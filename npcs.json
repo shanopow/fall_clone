@@ -1,7 +1,7 @@
 {
     "npcs": [
-        ["The Guide", ["talk"], "False", "?", ["Welcome to the game!", "I am the guide", "I have no purpose right now, sorry!"], "generic", [], "n1", 15, ""],
-        ["Guard", ["talk", "steal"], "True", "G", [],  "guard", [], "n2", 30, ""],
-        ["Trader Joe", ["talk", "trade", "steal"], "False", "R", ["Welcome Sir!", "I have the lowest prices around."], "trader", {"apple": 4, "banana": 3, "plum": 6}, "n3", 10, ""]
+        ["The Guide", ["talk"], "False", "?", ["Welcome to the game!", "I am the guide", "I have no purpose right now, sorry!"], "generic", [], "n001", 15, "w000", []],
+        ["Guard", ["talk", "steal"], "True", "G", [],  "guard", [], "n002", 30, "w003", []],
+        ["Trader Joe", ["talk", "trade", "steal"], "False", "R", ["Welcome Sir!", "I have the lowest prices around."], "trader", {"apple": 4, "banana": 3, "plum": 6}, "n003", 10, "w000", []]
     ]
 }

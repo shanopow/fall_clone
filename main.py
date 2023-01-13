@@ -58,11 +58,13 @@ if norm_user:
 traps = object_builder("traps.json", "__main__.Trap", "traps")
 npcs = object_builder("npcs.json", "__main__.Npc", "npcs")
 enemies = object_builder("enemies.json", "__main__.Enemy", "enemies")
+weapons = object_builder("weapons.json", "__main__.Weapon", "weapons")
 
-dweller = Player("Shane", 100, 1, 2, 1, 1, "x", "p1")
+dweller = Player("Shane", 100, 1, 2, 1, 1, "x", "p001", "w000",  weapons)
 players = []
 players.append(dweller)
-mega_list = final_object_builder(traps + npcs + enemies + players)
+# Final list of all objects in game
+mega_list = final_object_builder(traps + npcs + enemies + players + weapons)
 
 # Initial room
 room = map_maker("maps.json", "square_room", mega_list)

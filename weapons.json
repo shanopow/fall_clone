@@ -1,0 +1,8 @@
+{
+    "weapons": [
+        ["Fists", "melee", 1, "Give 'em the old one-two.", 0, "w000"],
+        ["Knife", "melee", 2, "A kitchen knife. It's dull, but still better than nothing.", 1,  "w001"],
+        ["10mm Pistol", "ranged", 7, "A 10mm pistol. Reliable and decently powerful.", 5, "w002"],
+        ["Police Baton", "melee", 3, "A plastic baton used for beating protestors at riots.", 2, "w003"]
+    ]
+}

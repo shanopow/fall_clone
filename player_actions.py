@@ -1,8 +1,11 @@
 
 from json_handler import map_maker
+from colorama import Fore, Back, Style
 from getch import getch
+import copy
+
 class Player(object):
-    def __init__(self, name, health, xp, rads, xpos, ypos, icon, form_id):
+    def __init__(self, name, health, xp, rads, xpos, ypos, icon, form_id, inventory, weapon_list):
         # Basic
         self.name = name
         self.health = health
@@ -13,6 +16,7 @@ class Player(object):
         self.icon = icon
         self.form_id = form_id
         self.location = "????"
+        
         # Limbs
         self.head = 100
         self.l_arm = 100
@@ -20,8 +24,12 @@ class Player(object):
         self.l_leg = 100
         self.r_leg = 100
 
-        self.inventory = []
-        self.money = 5
+        for item in weapon_list:
+            if item.form_id == inventory:
+                new_item = copy.deepcopy(item)
+                self.inventory = []
+                self.inventory.append(new_item)
+        self.money = 15
 
     def limb_check(self):
         return
@@ -35,7 +43,7 @@ class Player(object):
     def move_choice(self, mdir, vault, object_list):
         # user wants to quit
         if mdir == "q":
-            print('Do you want to quit? (Y\\N)')
+            print(Fore.RED + 'Do you want to quit? (Y\\N)')
             key = getch()
             key = str(key)
             key=key.replace("b","")
@@ -46,6 +54,13 @@ class Player(object):
                 quit()
             else:
                 return
+        # Opened the inventory
+        elif mdir == "i":
+            print(Fore.GREEN + "Inventory")
+            for item in self.inventory:
+                print(item.name)
+                a = input()
+                return        
         else:
             # up, down
             count = []
