@@ -55,19 +55,19 @@ if norm_user:
 # mega_list holds each possible object in the game
 # index based on form_id
 # should never be dupes here
-traps = object_builder("traps.json", "__main__.Trap", "traps")
-npcs = object_builder("npcs.json", "__main__.Npc", "npcs")
-enemies = object_builder("enemies.json", "__main__.Enemy", "enemies")
-weapons = object_builder("weapons.json", "__main__.Weapon", "weapons")
+traps = object_builder("assets/traps.json", "__main__.Trap", "traps")
+npcs = object_builder("assets/npcs.json", "__main__.Npc", "npcs")
+enemies = object_builder("assets/enemies.json", "__main__.Enemy", "enemies")
+weapons = object_builder("assets/weapons.json", "__main__.Weapon", "weapons")
+armour = object_builder("assets/armour.json", "__main__.Armour", "armour")
 
-dweller = Player("Shane", 100, 1, 2, 1, 1, "x", "p001", "w000",  weapons)
-players = []
-players.append(dweller)
 # Final list of all objects in game
-mega_list = final_object_builder(traps + npcs + enemies + players + weapons)
+mega_list = final_object_builder(traps + npcs + enemies + weapons + armour)
+dweller = Player("Shane", 100, 1, 2, 1, 1, "x", "p001", ["w000", "a000"], mega_list)
+mega_list[dweller.form_id] = dweller
 
 # Initial room
-room = map_maker("maps.json", "square_room", mega_list)
+room = map_maker("assets/maps.json", "square_room", mega_list)
 room = player_placer(dweller, None, room)
 
 just_entered = True
@@ -93,7 +93,7 @@ while True:
             # room variable is now the door we used
             just_entered = True
             old_room = copy.deepcopy(room)
-            room = map_maker("maps.json", room.door_to, mega_list)
+            room = map_maker("assets/maps.json", room.door_to, mega_list)
             room = player_placer(dweller, old_room, room)
         else:
             just_entered = False

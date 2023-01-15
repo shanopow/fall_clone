@@ -15,6 +15,6 @@ A few little tasks I want to implement still.
 6. Add weapons, armour (Just tedious)
 
 # Note
-Direction on this is currenlty undecided.
+Direction on this is currently undecided.
 Might go towards procedurally generated or towards hardcoded, maybe both
 When this is resolved this message will no longer be here

@@ -34,6 +34,15 @@ class Weapon(object):
         self.weight = holder[4]
         self.form_id = holder[5]
 
+class Armour(object):
+    def __init__(self, holder):
+        self.name = holder[0]
+        self.armour_type = holder[1]
+        self.threshold = holder[2]
+        self.item_desc = holder[3]
+        self.weight = holder[4]
+        self.form_id = holder[5]
+
 # Used as startup to main_acter
 def main_shower():
     logo = [" ######    #    #       #                 #       ####### #     # #######  ", " #        # #   #       #           ####  #       #     # ##    # #       "," #       #   #  #       #          #    # #       #     # # #   # #        ", " #####  #     # #       #          #      #       #     # #  #  # #####    ", " #      ####### #       #          #      #       #     # #   # # #        ", " #      #     # #       #          #    # #       #     # #    ## #        ", " #      #     # ####### #######     ####  ####### ####### #     # #######  "]

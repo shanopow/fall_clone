@@ -5,7 +5,7 @@ from getch import getch
 import copy
 
 class Player(object):
-    def __init__(self, name, health, xp, rads, xpos, ypos, icon, form_id, inventory, weapon_list):
+    def __init__(self, name, health, xp, rads, xpos, ypos, icon, form_id, inventory, item_list):
         # Basic
         self.name = name
         self.health = health
@@ -24,10 +24,10 @@ class Player(object):
         self.l_leg = 100
         self.r_leg = 100
 
-        for item in weapon_list:
-            if item.form_id == inventory:
-                new_item = copy.deepcopy(item)
-                self.inventory = []
+        self.inventory = []
+        self.equipped = {1 : "Empty"}
+        for item in inventory:
+                new_item = copy.deepcopy(item_list[item])
                 self.inventory.append(new_item)
         self.money = 15
 
@@ -56,11 +56,35 @@ class Player(object):
                 return
         # Opened the inventory
         elif mdir == "i":
+            print(Fore.GREEN + "Equipped")
+            try:
+                print(self.equipped[0].name)
+            except:
+                print("You have no weapon")
+            try:
+                print(self.equipped[1].name)
+            except:
+                print("You have no armour")
+    
             print(Fore.GREEN + "Inventory")
-            for item in self.inventory:
-                print(item.name)
+            for count, item in enumerate(self.inventory):
+                print(str(count) + ": " + item.name)
+            a = input()
+            try:
+                # move item to equipped, weapon goes to first slot, armour to second
+                a = int(a)
+                item_to_add = self.inventory[a]
+
+                if item_to_add.form_id[0] == "w":
+                    self.equipped[0] = item_to_add
+                
+                elif item_to_add.form_id[0] == "a":
+                    self.equipped[1] = item_to_add
+                return
+            except:
+                print("You cant equip that.")
                 a = input()
-                return        
+                return
         else:
             # up, down
             count = []
