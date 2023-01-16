@@ -37,7 +37,7 @@
     },
 
     "hallway2": {
-        "people" : {},
+        "people" : {"7,0" : "e001"},
         "doors" : {"square_room": "0,8"},
         "dimensions": [
         [0,0,0,0,0,1,1,1,1,1],

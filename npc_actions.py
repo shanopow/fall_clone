@@ -85,3 +85,7 @@ class Enemy(object):
         self.sight = holder[4]
         self.inventory = holder[5]
         self.form_id = holder[6]
+        self.icon = holder[7]
+
+    def __str__(self):
+        return self.name

@@ -11,6 +11,7 @@ class Door(object):
         self.door_to = door_to
         self.icon = "D"
         self.current_room = current_room
+        self.form_id = "d"
     
     def __str__(self):
         return ("Door to " + self.door_to)
@@ -163,13 +164,17 @@ def vault_shower(vault, player):
         for item in line:
             # All the items in each line
             if item.item_at != None:
-                if "Trap" in str(type(item.item_at)):
+                if "t" == item.item_at.form_id[0]:
                     if item.item_at.is_hidden == True:
                         holder += " "
                     else:
                         holder += Fore.RED + item.item_at.icon 
-                elif "Player" in str(type(item.item_at)):
+                elif "p" == item.item_at.form_id[0]:
                     holder += Fore.YELLOW + item.item_at.icon
+                
+                elif "e" == item.item_at.form_id[0]:
+                    holder += Fore.RED + item.item_at.icon
+
                 else:
                     holder += Fore.WHITE + item.item_at.icon
             else:
