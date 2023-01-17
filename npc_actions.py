@@ -1,3 +1,5 @@
+from map_builder import move_calc
+
 from colorama import init, Fore, Back, Style
 init(autoreset=True)
 
@@ -103,56 +105,42 @@ class Enemy(object):
             # Vertical
             # Try to move down
             if self.ypos < dweller.ypos and vault[self.ypos - 1][self.xpos].icon == " ":
-                self.ypos += 1
-                vault[self.ypos][self.xpos].item_at = self
-                vault[self.ypos - 1][self.xpos].item_at = None
+                vault = move_calc(vault, self, self.xpos, self.ypos + 1)
+            
             # Try to move up
             if self.ypos > dweller.ypos and vault[self.ypos + 1][self.xpos].icon == " ": 
-                self.ypos -= 1
-                vault[self.ypos][self.xpos].item_at = self
-                vault[self.ypos + 1][self.xpos].item_at = None
-            
+                vault = move_calc(vault, self, self.xpos, self.ypos - 1)
         
         elif self.ypos == dweller.ypos: 
             # Try to move to the Right
             if self.xpos < dweller.xpos and vault[self.ypos][self.xpos + 1].icon == " ":
-                self.xpos += 1
-                vault[self.ypos][self.xpos].item_at = self
-                vault[self.ypos][self.xpos - 1].item_at = None
-            
+                vault = move_calc(vault, self, self.xpos + 1, self.ypos)
+
             # Try to move to the Left
             elif self.xpos > dweller.xpos and vault[self.ypos][self.xpos - 1].icon == " ":
-                self.xpos -= 1
-                vault[self.ypos][self.xpos].item_at = self
-                vault[self.ypos][self.xpos + 1].item_at = None
+                vault = move_calc(vault, self, self.xpos - 1, self.ypos + 1)
 
         # Weirder movement
         elif horiz_dist <= vert_dist:
             # Horizontal
             # Try to move to the Right
             if self.xpos < dweller.xpos and vault[self.ypos][self.xpos + 1].icon == " ":
-                self.xpos += 1
-                vault[self.ypos][self.xpos].item_at = self
-                vault[self.ypos][self.xpos - 1].item_at = None
-            
+                vault = move_calc(vault, self, self.xpos + 1, self.ypos)
+
             # Try to move to the Left
             elif self.xpos > dweller.xpos and vault[self.ypos][self.xpos - 1].icon == " ":
-                self.xpos -= 1
-                vault[self.ypos][self.xpos].item_at = self
-                vault[self.ypos][self.xpos + 1].item_at = None                
-        
+                vault = move_calc(vault, self, self.xpos - 1, self.ypos)
+
         elif vert_dist < horiz_dist:
             # Vertical
             # Try to move down
             if self.ypos < dweller.ypos and vault[self.ypos - 1][self.xpos].icon == " ":
-                self.ypos += 1
-                vault[self.ypos][self.xpos].item_at = self
-                vault[self.ypos - 1][self.xpos].item_at = None
+                vault = move_calc(vault, self, self.xpos, self.ypos + 1)
+
             # Try to move up
             if self.ypos > dweller.ypos and vault[self.ypos + 1][self.xpos].icon == " ": 
-                self.ypos -= 1
-                vault[self.ypos][self.xpos].item_at = self
-                vault[self.ypos + 1][self.xpos].item_at = None
+                vault = move_calc(vault, self, self.xpos, self.ypos - 1)
+
         self.moved = True
         return vault
     

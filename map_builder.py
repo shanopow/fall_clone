@@ -99,7 +99,7 @@ def player_placer(player, prev_room, room):
                         cell.item_at = player
                         return room
 
-# Used in vault_updater for after direction has been determined 
+# Used in vault_updater / enemy movement for after direction has been determined 
 def move_calc(vault, to_move, xdir, ydir):
     if vault[ydir][xdir].item_at == None:
         # Normal movement
@@ -117,9 +117,11 @@ def move_calc(vault, to_move, xdir, ydir):
     elif vault[ydir][xdir].item_at.icon == "D":
         #Moving into a door here
         return vault[ydir][xdir].item_at
+    
     else:
         vault[ydir][xdir].item_at.interacted(to_move)
         # Npcs go here
+    
     return vault
 
 
