@@ -20,14 +20,14 @@ class Npc(object):
         self.ypos = ypos
 
     def interacted(self, dweller):
-        # intro
+        # Intro
         print(Fore.GREEN + "You are interacting with " +  self.name)
         print(Fore.GREEN + "You can do the following:")
         for each in self.avail_options:
             print(each)
         
-        # user input
-        # each option should be checker here as will break otherwise
+        # User input
+        # Each option should be checker here as will break otherwise
         interaction_type = input()
         interaction_type = interaction_type.lower() 
         if interaction_type == "talk":
@@ -71,21 +71,90 @@ class Npc(object):
                 del self.trade_inventory[to_choose]
                 print(Fore.GREEN + "Thank you for your business!")
             else:
-                print(Fore.RED + "Sorry, but you dont have the coin!")
+                print(Fore.RED + "Sorry, but you dont have enough coins!")
         else:
             print(Fore.RED + "That item isn't in my inventory, please try again")
 
-# always hostile, built for fighting, along with few other systems
+# Always hostile, built for fighting, along with few other systems
 class Enemy(object):
     def __init__(self, holder):
         self.name = holder[0]
         self.health = holder[1]
         self.damage = holder[2]
         self.rad_damage = holder[3]
-        self.sight = holder[4]
-        self.inventory = holder[5]
-        self.form_id = holder[6]
-        self.icon = holder[7]
+        self.inventory = holder[4]
+        self.form_id = holder[5]
+        self.icon = holder[6]
+        self.moved = False
 
+    # way this works is we check dir we want to move enemy through comparing ypos and xpos. Prefer to move across over down first.
+    # Find horizontal and vertical dist between player and enemy first
+    def movement(self, dweller, vault):
+        # Find distance
+        horiz_dist = dweller.xpos - self.xpos
+        if horiz_dist < 0:
+            horiz_dist = horiz_dist * -1
+        vert_dist = dweller.ypos - self.ypos
+        if vert_dist < 0:
+            vert_dist = vert_dist * -1 
+            
+        # On dead straight line with Player
+        if self.xpos == dweller.xpos:
+            # Vertical
+            # Try to move down
+            if self.ypos < dweller.ypos and vault[self.ypos - 1][self.xpos].icon == " ":
+                self.ypos += 1
+                vault[self.ypos][self.xpos].item_at = self
+                vault[self.ypos - 1][self.xpos].item_at = None
+            # Try to move up
+            if self.ypos > dweller.ypos and vault[self.ypos + 1][self.xpos].icon == " ": 
+                self.ypos -= 1
+                vault[self.ypos][self.xpos].item_at = self
+                vault[self.ypos + 1][self.xpos].item_at = None
+            
+        
+        elif self.ypos == dweller.ypos: 
+            # Try to move to the Right
+            if self.xpos < dweller.xpos and vault[self.ypos][self.xpos + 1].icon == " ":
+                self.xpos += 1
+                vault[self.ypos][self.xpos].item_at = self
+                vault[self.ypos][self.xpos - 1].item_at = None
+            
+            # Try to move to the Left
+            elif self.xpos > dweller.xpos and vault[self.ypos][self.xpos - 1].icon == " ":
+                self.xpos -= 1
+                vault[self.ypos][self.xpos].item_at = self
+                vault[self.ypos][self.xpos + 1].item_at = None
+
+        # Weirder movement
+        elif horiz_dist <= vert_dist:
+            # Horizontal
+            # Try to move to the Right
+            if self.xpos < dweller.xpos and vault[self.ypos][self.xpos + 1].icon == " ":
+                self.xpos += 1
+                vault[self.ypos][self.xpos].item_at = self
+                vault[self.ypos][self.xpos - 1].item_at = None
+            
+            # Try to move to the Left
+            elif self.xpos > dweller.xpos and vault[self.ypos][self.xpos - 1].icon == " ":
+                self.xpos -= 1
+                vault[self.ypos][self.xpos].item_at = self
+                vault[self.ypos][self.xpos + 1].item_at = None                
+        
+        elif vert_dist < horiz_dist:
+            # Vertical
+            # Try to move down
+            if self.ypos < dweller.ypos and vault[self.ypos - 1][self.xpos].icon == " ":
+                self.ypos += 1
+                vault[self.ypos][self.xpos].item_at = self
+                vault[self.ypos - 1][self.xpos].item_at = None
+            # Try to move up
+            if self.ypos > dweller.ypos and vault[self.ypos + 1][self.xpos].icon == " ": 
+                self.ypos -= 1
+                vault[self.ypos][self.xpos].item_at = self
+                vault[self.ypos + 1][self.xpos].item_at = None
+        self.moved = True
+        return vault
+    
     def __str__(self):
         return self.name

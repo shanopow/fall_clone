@@ -120,7 +120,6 @@ def move_calc(vault, to_move, xdir, ydir):
     else:
         vault[ydir][xdir].item_at.interacted(to_move)
         # Npcs go here
-
     return vault
 
 
@@ -132,21 +131,28 @@ def vault_updater(vault, to_move, dir):
     if dir in "ws":
         if dir == "w":
             vault = move_calc(vault, to_move, to_move.xpos, to_move.ypos - 1)
-            return vault
-        
         elif dir == "s":
             vault = move_calc(vault, to_move,to_move.xpos, to_move.ypos + 1)
-            return vault
 
     # Horizontal
     elif dir in "ad":
         if dir == "d":
             vault = move_calc(vault, to_move, to_move.xpos + 1, to_move.ypos)
-            return vault
-                
         elif dir == "a":
             vault = move_calc(vault, to_move,  to_move.xpos - 1, to_move.ypos)
-            return vault
+    
+    # Enemies time for movement
+    if type(vault) == list:
+        for line in vault:
+            for cell in line:
+                if cell.item_at != None:
+                    if cell.item_at.form_id[0] == "e":
+                        if cell.item_at.moved is False:
+                            # When we find an enemy who can move, update its movement
+                            vault = cell.item_at.movement(to_move, vault)
+                        else:
+                            cell.item_at.moved = False
+    return vault
 
 
 # Shows vault, ran once after each update
@@ -166,9 +172,12 @@ def vault_shower(vault, player):
             if item.item_at != None:
                 if "t" == item.item_at.form_id[0]:
                     if item.item_at.is_hidden == True:
+                        # make the trap hidden
                         holder += " "
                     else:
+                        # normal
                         holder += Fore.RED + item.item_at.icon 
+                
                 elif "p" == item.item_at.form_id[0]:
                     holder += Fore.YELLOW + item.item_at.icon
                 
