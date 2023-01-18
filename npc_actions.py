@@ -16,6 +16,7 @@ class Npc(object):
         self.hp = holder[8]
         self.weapon = holder[9]
         self.inventory = holder[10]
+        self.quest_dial = holder[11]
 
     def set_pos(self, xpos, ypos):
         self.xpos = xpos
@@ -89,6 +90,7 @@ class Enemy(object):
         self.icon = holder[6]
         self.moved = False
 
+    
     # way this works is we check dir we want to move enemy through comparing ypos and xpos. Prefer to move across over down first.
     # Find horizontal and vertical dist between player and enemy first
     def movement(self, dweller, vault):
@@ -99,21 +101,31 @@ class Enemy(object):
         vert_dist = dweller.ypos - self.ypos
         if vert_dist < 0:
             vert_dist = vert_dist * -1 
-            
+
+
         # On dead straight line with Player
+        # Also includes choosing to attack
         if self.xpos == dweller.xpos:
+            # Check the areas above and below for a player
+            if self.ypos == dweller.ypos - 1 or self.ypos == dweller.ypos + 1:
+                self.interacted(dweller)
+            
             # Vertical
             # Try to move down
-            if self.ypos < dweller.ypos and vault[self.ypos - 1][self.xpos].icon == " ":
+            elif self.ypos < dweller.ypos and vault[self.ypos - 1][self.xpos].icon == " ":
                 vault = move_calc(vault, self, self.xpos, self.ypos + 1)
-            
+
             # Try to move up
-            if self.ypos > dweller.ypos and vault[self.ypos + 1][self.xpos].icon == " ": 
+            elif self.ypos > dweller.ypos and vault[self.ypos + 1][self.xpos].icon == " ": 
                 vault = move_calc(vault, self, self.xpos, self.ypos - 1)
         
         elif self.ypos == dweller.ypos: 
+            if self.xpos == dweller.xpos - 1 or self.xpos == dweller.xpos + 1:
+                self.interacted(dweller)
+            
+            # Hoizontal
             # Try to move to the Right
-            if self.xpos < dweller.xpos and vault[self.ypos][self.xpos + 1].icon == " ":
+            elif self.xpos < dweller.xpos and vault[self.ypos][self.xpos + 1].icon == " ":
                 vault = move_calc(vault, self, self.xpos + 1, self.ypos)
 
             # Try to move to the Left
@@ -143,6 +155,10 @@ class Enemy(object):
 
         self.moved = True
         return vault
-    
+
+    def interacted(self, dweller):
+        print("working")
+        quit()
+
     def __str__(self):
         return self.name

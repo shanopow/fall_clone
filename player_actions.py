@@ -5,7 +5,7 @@ from getch import getch
 import copy
 
 class Player(object):
-    def __init__(self, name, health, xp, rads, xpos, ypos, icon, form_id, inventory, item_list):
+    def __init__(self, name, health, xp, rads, xpos, ypos, icon, form_id, inventory, item_list, special):
         # Basic
         self.name = name
         self.health = health
@@ -17,6 +17,15 @@ class Player(object):
         self.form_id = form_id
         self.location = "????"
         
+        # SPECIAL STATS
+        self.strength = special[0]
+        self.perception = special[1]
+        self.endurance = special[2]
+        self.charisma = special[3]
+        self.intelligence = special[4]
+        self.agility = special[5]
+        self.luck = special[6]
+
         # Limbs
         self.head = 100
         self.l_arm = 100
@@ -26,10 +35,10 @@ class Player(object):
 
         self.inventory = []
         self.equipped = {1 : "Empty"}
+        self.money = 15
         for item in inventory:
                 new_item = copy.deepcopy(item_list[item])
                 self.inventory.append(new_item)
-        self.money = 15
 
     def limb_check(self):
         return

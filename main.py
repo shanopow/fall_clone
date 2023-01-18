@@ -23,21 +23,14 @@ import copy
 init(autoreset=True)
 
 # Fullscreen
-win_lin = input("win or lin?")
-if win_lin == "win":
-    user32 = ctypes.WinDLL('user32')
-    SW_MAXIMISE = 3
-    hWnd = user32.GetForegroundWindow()
-    user32.ShowWindow(hWnd, SW_MAXIMISE)
+user32 = ctypes.WinDLL('user32')
+SW_MAXIMISE = 3
+hWnd = user32.GetForegroundWindow()
+user32.ShowWindow(hWnd, SW_MAXIMISE)
 
 # Clearing Option
-print("Choose the type of clearing")
-print("cls / other")
-a = input()
-if a == "cls":
-    system('cls')
-else:
-    print("\033[2J")
+#system('cls')
+print("\033[2J")
 
 
 # Main Menu
@@ -45,11 +38,8 @@ else:
 norm_user = False
 if norm_user:
     main_acter()
-
-    if a == "cls":
-            system('cls')
-    else:
-        print("\033[2J")
+    system('cls')
+    #print("\033[2J")
 
 # Reading from the json files
 # mega_list holds each possible object in the game
@@ -63,7 +53,7 @@ armour = object_builder("assets/armour.json", "__main__.Armour", "armour")
 
 # Final list of all objects in game
 mega_list = final_object_builder(traps + npcs + enemies + weapons + armour)
-dweller = Player("Shane", 100, 1, 2, 1, 1, "x", "p001", ["w000", "a000"], mega_list)
+dweller = Player("Shane", 100, 1, 2, 1, 1, "x", "p001", ["w000", "a000"], mega_list, [5,5,5,5,5,5,5])
 mega_list[dweller.form_id] = dweller
 
 # Initial room
@@ -98,7 +88,5 @@ while True:
         else:
             just_entered = False
 
-    if a == "cls":
-        system('cls')
-    else:
-        print("\033[2J")
+    #system('cls')
+    print("\033[2J")
