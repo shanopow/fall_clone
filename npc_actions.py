@@ -1,5 +1,6 @@
 from map_builder import move_calc
 
+from random import randint
 from colorama import init, Fore, Back, Style
 init(autoreset=True)
 
@@ -83,14 +84,11 @@ class Enemy(object):
     def __init__(self, holder):
         self.name = holder[0]
         self.health = holder[1]
-        self.damage = holder[2]
-        self.rad_damage = holder[3]
-        self.inventory = holder[4]
-        self.form_id = holder[5]
-        self.icon = holder[6]
+        self.drops = holder[2]
+        self.form_id = holder[3]
+        self.icon = holder[4]
         self.moved = False
 
-    
     # way this works is we check dir we want to move enemy through comparing ypos and xpos. Prefer to move across over down first.
     # Find horizontal and vertical dist between player and enemy first
     def movement(self, dweller, vault):
@@ -100,9 +98,8 @@ class Enemy(object):
             horiz_dist = horiz_dist * -1
         vert_dist = dweller.ypos - self.ypos
         if vert_dist < 0:
-            vert_dist = vert_dist * -1 
-
-
+            vert_dist = vert_dist * -1     
+        
         # On dead straight line with Player
         # Also includes choosing to attack
         if self.xpos == dweller.xpos:
@@ -156,9 +153,66 @@ class Enemy(object):
         self.moved = True
         return vault
 
+    def __str__(self):
+        return self.name
+    
+    def hit_chance(self, dweller):
+        # chance of enemy dodging attack
+        armour_class = dwller.agility
+        if dweller.equipped[1].armour_type == "medium":
+            armour_class += 5
+        elif dweller.equipped[1].armour_type == "heavy":
+            armour_class += 3
+        else:
+            armour_class += 8
+        
+        if random.randint(1, 75) <= armour_class:
+            # Will Hit
+            return True
+        else:
+            # Deflected
+            return False
+
+
+class Animal(Enemy):
+    def __init__(self, holder):
+        super().__init__(holder)
+        self.damage = holder[5]
+        self.dt = holder[6]
+        self.animal_style = holder[7]
+
+
+    
+    def interacted(self, dweller):
+        print("working")
+        quit()
+    
+    # Animals just use their basic attack stat, compared simply to player dt    
+    def attack(self, dweller):
+        # chance to hit, fasle if player dodges
+        go_ahead = self.hit_chance(dweller)
+        if go_ahead:
+            labone = True     
+        else:
+            return(self.name, "missed you completely!")
+
+class Hostile(Enemy):
+    def __init__(self, holder):
+        super().__init__(holder)
+        self.weapon = holder[5]
+        self.armour = holder[6]
+
+    
     def interacted(self, dweller):
         print("working")
         quit()
 
-    def __str__(self):
-        return self.name
+    # Hostiles will use their weapon to attack enemy, weapon attack is compared to player dt
+    def attack(self):
+        # chance to hit, false if payer dodges
+        go_ahead = self.hit_chance(dweller)
+        if go_ahead:
+            # important
+            labone = True
+        else:
+            return(self.name, "missed you completely!")

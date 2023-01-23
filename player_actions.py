@@ -33,6 +33,7 @@ class Player(object):
         self.l_leg = 100
         self.r_leg = 100
 
+        self.journal = []
         self.inventory = []
         self.equipped = {1 : "Empty"}
         self.money = 15

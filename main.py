@@ -12,7 +12,7 @@ from os import system, name
 from colorama import init, Fore, Back, Style
 from getch import getch
 
-import random
+from random import randint
 import ctypes
 import time
 import sys
@@ -47,12 +47,18 @@ if norm_user:
 # should never be dupes here
 traps = object_builder("assets/traps.json", "__main__.Trap", "traps")
 npcs = object_builder("assets/npcs.json", "__main__.Npc", "npcs")
-enemies = object_builder("assets/enemies.json", "__main__.Enemy", "enemies")
 weapons = object_builder("assets/weapons.json", "__main__.Weapon", "weapons")
 armour = object_builder("assets/armour.json", "__main__.Armour", "armour")
+traps = object_builder("assets/traps.json", "__main__.Trap", "traps")
+quests = object_builder("assets/quests.json", "__main__.Quest", "quests")
+
+animals = object_builder("assets/enemies/animals.json", "__main__.Animal", "animals")
+hostiles = object_builder("assets/enemies/hostiles.json", "__main__.Hostile", "hostiles")
 
 # Final list of all objects in game
-mega_list = final_object_builder(traps + npcs + enemies + weapons + armour)
+mega_list = final_object_builder(traps + npcs + animals + hostiles + weapons + armour + quests)
+
+# Player
 dweller = Player("Shane", 100, 1, 2, 1, 1, "x", "p001", ["w000", "a000"], mega_list, [5,5,5,5,5,5,5])
 mega_list[dweller.form_id] = dweller
 

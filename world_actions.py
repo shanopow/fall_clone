@@ -6,6 +6,15 @@ import copy
 import random
 from colorama import Fore, Back, Style
 
+class Quest(object):
+    def __init__(self, holder):
+        self.name = holder[0]
+        self.quest_giver = holder[1]
+        self.dialogue_list = holder[2]
+        self.reward = holder[3]
+        self.mid_triggers = holder[4]
+        self.form_id = holder[5]
+
 class Trap(object):
     def __init__(self, holder):
         #name, xpos, ypos, damage, icon ,is_hidden=False

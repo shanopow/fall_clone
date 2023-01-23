@@ -1,7 +1,0 @@
-{
-    "enemies": [
-        ["Radroach", 2, 1, 1, [], "e001", "r"],
-        ["Ghoul", 5, 3, 0, [], "e002", "g"],
-        ["The Glowing One", 15, 6, 5, ["Cavern Key"], "e003", "t"]
-    ]
-}
