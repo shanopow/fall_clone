@@ -1,6 +1,8 @@
 from json_handler import map_maker
 from colorama import Fore, Back, Style
 from getch import getch
+
+import random
 import copy
 
 class Player(object):
@@ -55,7 +57,10 @@ class Player(object):
     def limb_dam(self, limb, dam):
         current_limb = getattr(self, limb)
         setattr(self, limb, current_limb - dam)
-        
+    
+    def interacted(self, dweller):
+        pass
+
     def deflect_chance(self, target):
         # Chance of enemy dodging attack
         try:
@@ -77,27 +82,47 @@ class Player(object):
             return False
 
     def attack(self, target, location):
-        try:
-            tar_def = target.armour.threshold
-        except:
-            tar_def = target.dt
-        
-        if location.lower() == "head":
-            lm = 2
+        combat_logs = []
+        deflected = self.deflect_chance(target)
+        if deflected:
+            combat_logs.append(target.name + " dodged your attack")
+            return (deflected, comabt_logs)
         else:
-            lm = 1
+            # Some vars to init for later
+            try:
+                tar_def = target.armour.threshold
+            except:
+                tar_def = target.dt
 
-        weapon_used = self.equipped[0]
-        if weapon_used.attack_type == "melee":
-            # Melee attack
-            dam = weapon_used.damage + (self.strength * 0.5)
-            dam_adj = dam - tar_def * lm
-        
-        else:
-            # Ranged attack
-            dam = weapon_used.damage
-            dam_adj = dam - tar_def * lm
-        
+            if location.lower() == "head":
+                lm = 2
+            else:
+                lm = 1
+
+            weapon_used = self.equipped[0]
+            if weapon_used.attack_type == "melee":
+                # Melee attack
+                dam = weapon_used.damage + (self.strength * 0.5)
+                dam_adj = (dam - tar_def) * lm
+            else:
+                # Ranged attack
+                dam = weapon_used.damage
+                dam_adj = (dam - tar_def) * lm
+            combat_logs.append(target.health)
+            # Should always be true, likely useless check here
+            if dam_adj > 0:
+                combat_logs.append("You hit {} for {} damage".format(target.name, str(dam_adj)))
+                target.health -= dam_adj         
+            combat_logs.append(target.health)
+            
+            # Check if they are destroyed
+            destroyed = False
+            if target.health <= 1:
+                destroyed = True
+                combat_logs.append("You have destroyed the " + target.name)
+            
+            return (deflected, combat_logs, destroyed)
+
     # Checks the validity of a a movement
     def move_choice(self, mdir, vault, object_list):
         # User wants to quit

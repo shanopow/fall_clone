@@ -1,4 +1,4 @@
-from map_builder import move_calc
+from map_builder import move_calc, combat_manager
 
 from random import randint
 from colorama import init, Fore, Back, Style
@@ -104,12 +104,11 @@ class Enemy(object):
         # Also includes choosing to attack
         if self.xpos == dweller.xpos:
             # Check the areas above and below for a player
-            if self.ypos == dweller.ypos - 1 or self.ypos == dweller.ypos + 1:
-                self.interacted(dweller)
+            #if self.ypos == dweller.ypos - 1 or self.ypos == dweller.ypos + 1:
             
             # Vertical
             # Try to move down
-            elif self.ypos < dweller.ypos and vault[self.ypos - 1][self.xpos].icon == " ":
+            if self.ypos < dweller.ypos and vault[self.ypos - 1][self.xpos].icon == " ":
                 vault = move_calc(vault, self, self.xpos, self.ypos + 1)
 
             # Try to move up
@@ -117,12 +116,10 @@ class Enemy(object):
                 vault = move_calc(vault, self, self.xpos, self.ypos - 1)
         
         elif self.ypos == dweller.ypos: 
-            if self.xpos == dweller.xpos - 1 or self.xpos == dweller.xpos + 1:
-                self.interacted(dweller)
-            
+            #if self.xpos == dweller.xpos - 1 or self.xpos == dweller.xpos + 1:
             # Hoizontal
             # Try to move to the Right
-            elif self.xpos < dweller.xpos and vault[self.ypos][self.xpos + 1].icon == " ":
+            if self.xpos < dweller.xpos and vault[self.ypos][self.xpos + 1].icon == " ":
                 vault = move_calc(vault, self, self.xpos + 1, self.ypos)
 
             # Try to move to the Left

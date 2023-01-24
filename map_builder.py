@@ -128,7 +128,7 @@ def move_calc(vault, to_move, xdir, ydir):
                     if cell.item_at.form_id[0] == "e":
                         counter += 1
                         enemy_list[counter] = cell.item_at
-                        combat_manager(vault, to_move, enemy_list)
+                        combat_manager(vault, to_move, enemy_list, True)
 
     else:
         vault[ydir][xdir].item_at.interacted(to_move)
@@ -210,9 +210,8 @@ def vault_shower(vault, player):
         print(Fore.CYAN + Back.CYAN + (" " * (1 + longest - len(line))))
     print(Fore.CYAN + Back.CYAN + " " * (2 + longest))
 
-def combat_manager(vault, dweller, enemy_list):
-    #  show layout of combat board
-    player_turn = True
+def combat_manager(vault, dweller, enemy_list, player_turn):
+    #  Show layout of combat board
     while enemy_list != {}:
         print("You can see:")
         for count, enemy in enemy_list.items():
@@ -234,10 +233,16 @@ def combat_manager(vault, dweller, enemy_list):
             location_picked = True
             valid_locations = ["head", "left arm", "right arm", "chest", "right leg", "left leg"]
             while location_picked:
-                location_ans = input("Please enter where you want to hit")
+                print("Please enter where you want to hit:")
+                location_ans = input()
                 if location_ans.lower() in valid_locations:
                     location_picked = False
                 else:
                     print(Fore.RED + "Please enter a valid location on the body")        
             
-            dweller.attack(enemy_list[attack_choice], location_ans)
+            ret_data = dweller.attack(enemy_list[attack_choice], location_ans)
+            if ret_data[2] is True:
+                # write deletion here.
+                pass
+            for log in ret_data[1]:
+                print(log)
