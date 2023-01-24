@@ -118,6 +118,18 @@ def move_calc(vault, to_move, xdir, ydir):
         #Moving into a door here
         return vault[ydir][xdir].item_at
     
+    elif vault[ydir][xdir].item_at.form_id[0] == "e":
+        #combat is done here with normal enemies
+        enemy_list = {}
+        counter = 0
+        for line in vault:
+            for cell in line:
+                if cell.item_at is not None:
+                    if cell.item_at.form_id[0] == "e":
+                        counter += 1
+                        enemy_list[counter] = cell.item_at
+                        combat_manager(vault, to_move, enemy_list)
+
     else:
         vault[ydir][xdir].item_at.interacted(to_move)
         # Npcs go here
@@ -197,3 +209,35 @@ def vault_shower(vault, player):
         print(holder, end="")
         print(Fore.CYAN + Back.CYAN + (" " * (1 + longest - len(line))))
     print(Fore.CYAN + Back.CYAN + " " * (2 + longest))
+
+def combat_manager(vault, dweller, enemy_list):
+    #  show layout of combat board
+    player_turn = True
+    while enemy_list != {}:
+        print("You can see:")
+        for count, enemy in enemy_list.items():
+            print(str(count) + ": ", end="")
+            print(enemy)
+        if player_turn is True:
+            print("Choose one to attack: ")
+            chose_wrong = True
+            while chose_wrong:
+                try:
+                    attack_choice = int(input())
+                    if attack_choice in enemy_list.keys():
+                        chose_wrong = False
+                    else:
+                        print(Fore.RED + "Please enter a valid enemy to attack.")
+                except ValueError:
+                    print(Fore.RED + "Please enter a valid enemy to attack.")
+            
+            location_picked = True
+            valid_locations = ["head", "left arm", "right arm", "chest", "right leg", "left leg"]
+            while location_picked:
+                location_ans = input("Please enter where you want to hit")
+                if location_ans.lower() in valid_locations:
+                    location_picked = False
+                else:
+                    print(Fore.RED + "Please enter a valid location on the body")        
+            
+            dweller.attack(enemy_list[attack_choice], location_ans)

@@ -153,10 +153,7 @@ class Enemy(object):
         self.moved = True
         return vault
 
-    def __str__(self):
-        return self.name
-    
-    def hit_chance(self, dweller):
+    def deflect_chance(self, dweller):
         # chance of enemy dodging attack
         armour_class = dwller.agility
         if dweller.equipped[1].armour_type == "medium":
@@ -173,6 +170,9 @@ class Enemy(object):
             # Deflected
             return False
 
+    def __str__(self):
+        return self.name
+
 
 class Animal(Enemy):
     def __init__(self, holder):
@@ -181,16 +181,10 @@ class Animal(Enemy):
         self.dt = holder[6]
         self.animal_style = holder[7]
 
-
-    
-    def interacted(self, dweller):
-        print("working")
-        quit()
-    
     # Animals just use their basic attack stat, compared simply to player dt    
     def attack(self, dweller):
-        # chance to hit, fasle if player dodges
-        go_ahead = self.hit_chance(dweller)
+        # chance to hit, false if player dodges
+        go_ahead = self.deflect_chance(dweller)
         if go_ahead:
             labone = True     
         else:
@@ -201,12 +195,7 @@ class Hostile(Enemy):
         super().__init__(holder)
         self.weapon = holder[5]
         self.armour = holder[6]
-
     
-    def interacted(self, dweller):
-        print("working")
-        quit()
-
     # Hostiles will use their weapon to attack enemy, weapon attack is compared to player dt
     def attack(self):
         # chance to hit, false if payer dodges

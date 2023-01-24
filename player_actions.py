@@ -1,4 +1,3 @@
-
 from json_handler import map_maker
 from colorama import Fore, Back, Style
 from getch import getch
@@ -35,11 +34,19 @@ class Player(object):
 
         self.journal = []
         self.inventory = []
-        self.equipped = {1 : "Empty"}
         self.money = 15
+        
         for item in inventory:
-                new_item = copy.deepcopy(item_list[item])
-                self.inventory.append(new_item)
+            new_item = copy.deepcopy(item_list[item])
+            self.inventory.append(new_item)
+        
+        self.equipped = {}
+        for count, item in enumerate(self.inventory):
+            if count < 2:
+                if item.form_id[0] == "w":
+                    self.equipped[0] = item  
+                elif item.form_id[0] == "a":
+                    self.equipped[1] = item
 
     def limb_check(self):
         return
@@ -49,9 +56,51 @@ class Player(object):
         current_limb = getattr(self, limb)
         setattr(self, limb, current_limb - dam)
         
-    # checks the validity of a a movement
+    def deflect_chance(self, target):
+        # Chance of enemy dodging attack
+        try:
+            armour_class = 5
+            if target.armour.armour_type == "medium":
+                armour_class += 5
+            elif target.armour.armour_type == "heavy":
+                armour_class += 3
+            else:
+                armour_class += 8
+        except:
+            armour_class = 5
+        
+        if random.randint(1, 75) <= armour_class:
+            # Will Hit
+            return True
+        else:
+            # Deflected
+            return False
+
+    def attack(self, target, location):
+        try:
+            tar_def = target.armour.threshold
+        except:
+            tar_def = target.dt
+        
+        if location.lower() == "head":
+            lm = 2
+        else:
+            lm = 1
+
+        weapon_used = self.equipped[0]
+        if weapon_used.attack_type == "melee":
+            # Melee attack
+            dam = weapon_used.damage + (self.strength * 0.5)
+            dam_adj = dam - tar_def * lm
+        
+        else:
+            # Ranged attack
+            dam = weapon_used.damage
+            dam_adj = dam - tar_def * lm
+        
+    # Checks the validity of a a movement
     def move_choice(self, mdir, vault, object_list):
-        # user wants to quit
+        # User wants to quit
         if mdir == "q":
             print(Fore.RED + 'Do you want to quit? (Y\\N)')
             key = getch()
