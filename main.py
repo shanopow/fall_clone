@@ -45,15 +45,15 @@ if norm_user:
 # mega_list holds each possible object in the game
 # index based on form_id
 # should never be dupes here
-traps = object_builder("assets/traps.json", "__main__.Trap", "traps")
-npcs = object_builder("assets/npcs.json", "__main__.Npc", "npcs")
-weapons = object_builder("assets/weapons.json", "__main__.Weapon", "weapons")
-armour = object_builder("assets/armour.json", "__main__.Armour", "armour")
-traps = object_builder("assets/traps.json", "__main__.Trap", "traps")
-quests = object_builder("assets/quests.json", "__main__.Quest", "quests")
+traps = object_builder("local_assets/traps.json", "__main__.Trap", "traps")
+npcs = object_builder("local_assets/npcs.json", "__main__.Npc", "npcs")
+weapons = object_builder("local_assets/weapons.json", "__main__.Weapon", "weapons")
+armour = object_builder("local_assets/armour.json", "__main__.Armour", "armour")
+traps = object_builder("local_assets/traps.json", "__main__.Trap", "traps")
+quests = object_builder("local_assets/quests.json", "__main__.Quest", "quests")
 
-animals = object_builder("assets/enemies/animals.json", "__main__.Animal", "animals")
-hostiles = object_builder("assets/enemies/hostiles.json", "__main__.Hostile", "hostiles")
+animals = object_builder("local_assets/local_enemies/animals.json", "__main__.Animal", "animals")
+hostiles = object_builder("local_assets/local_enemies/hostiles.json", "__main__.Hostile", "hostiles")
 
 # Final list of all objects in game
 mega_list = final_object_builder(traps + npcs + animals + hostiles + weapons + armour + quests)

@@ -3,6 +3,7 @@
 from colorama import Fore, Back, Style
 import ctypes
 import random
+import json
 
 class Door(object):
     def __init__(self, xpos, ypos, door_to, current_room):
@@ -242,6 +243,7 @@ def combat_manager(vault, dweller, enemy_list, player_turn):
                     print(Fore.RED + "Please enter a valid location on the body")        
             
             ret_data = dweller.attack(enemy_list[attack_choice], location_ans)
+            # WHen all enemies have been destroyed
             if ret_data[2]:
                 enemy_remover.append(enemy_list[attack_choice])
                 enemy_list.pop(attack_choice)
@@ -249,4 +251,5 @@ def combat_manager(vault, dweller, enemy_list, player_turn):
                 print(log)
     for item in enemy_remover:
         vault[item.ypos][item.xpos].item_at = None
+    
     return vault

@@ -32,7 +32,6 @@ def map_maker(file_name, chosen, object_list):
     print("Could not find this map, exiting now")
     quit()
 
-
 # for converting name of class in str to actual class, used in normal object builder, DO NOT USE ALONE
 def get_class(kls):
     parts = kls.split('.')
