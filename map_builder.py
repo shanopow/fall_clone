@@ -118,7 +118,7 @@ def move_calc(vault, to_move, xdir, ydir):
         #Moving into a door here
         return vault[ydir][xdir].item_at
     
-    elif vault[ydir][xdir].item_at.form_id[0] == "e":
+    elif vault[ydir][xdir].item_at.form_id[0] == "e" and not to_move.form_id[0] == "e":
         #combat is done here with normal enemies
         enemy_list = {}
         counter = 0
@@ -128,11 +128,10 @@ def move_calc(vault, to_move, xdir, ydir):
                     if cell.item_at.form_id[0] == "e":
                         counter += 1
                         enemy_list[counter] = cell.item_at
-                        combat_manager(vault, to_move, enemy_list, True)
-
-    else:
-        vault[ydir][xdir].item_at.interacted(to_move)
+        vault = combat_manager(vault, to_move, enemy_list, True)
+    elif vault[ydir][xdir].item_at.form_id[0] == "n":
         # Npcs go here
+        vault[ydir][xdir].item_at.interacted(to_move)
     
     return vault
 
@@ -212,7 +211,9 @@ def vault_shower(vault, player):
 
 def combat_manager(vault, dweller, enemy_list, player_turn):
     #  Show layout of combat board
+    enemy_remover = []
     while enemy_list != {}:
+        print(Fore.CYAN + ("_" * 20))
         print("You can see:")
         for count, enemy in enemy_list.items():
             print(str(count) + ": ", end="")
@@ -241,8 +242,11 @@ def combat_manager(vault, dweller, enemy_list, player_turn):
                     print(Fore.RED + "Please enter a valid location on the body")        
             
             ret_data = dweller.attack(enemy_list[attack_choice], location_ans)
-            if ret_data[2] is True:
-                # write deletion here.
-                pass
+            if ret_data[2]:
+                enemy_remover.append(enemy_list[attack_choice])
+                enemy_list.pop(attack_choice)
             for log in ret_data[1]:
                 print(log)
+    for item in enemy_remover:
+        vault[item.ypos][item.xpos].item_at = None
+    return vault

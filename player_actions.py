@@ -86,7 +86,7 @@ class Player(object):
         deflected = self.deflect_chance(target)
         if deflected:
             combat_logs.append(target.name + " dodged your attack")
-            return (deflected, comabt_logs)
+            return (deflected, combat_logs)
         else:
             # Some vars to init for later
             try:
