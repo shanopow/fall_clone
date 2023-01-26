@@ -6,6 +6,7 @@ from player_actions import *
 from npc_actions import *
 from world_actions import *
 from json_handler import *
+from save_manager import *
 
 # Module imports
 from os import system, name
@@ -41,19 +42,24 @@ if norm_user:
     system('cls')
     #print("\033[2J")
 
+# Set up local files 
+# MOVE INTO MAIN MENU
+file_deleter("local_assets/maps.json")
+file_mover("assets/maps.json")
+
 # Reading from the json files
 # mega_list holds each possible object in the game
 # index based on form_id
 # should never be dupes here
-traps = object_builder("local_assets/traps.json", "__main__.Trap", "traps")
-npcs = object_builder("local_assets/npcs.json", "__main__.Npc", "npcs")
-weapons = object_builder("local_assets/weapons.json", "__main__.Weapon", "weapons")
-armour = object_builder("local_assets/armour.json", "__main__.Armour", "armour")
-traps = object_builder("local_assets/traps.json", "__main__.Trap", "traps")
-quests = object_builder("local_assets/quests.json", "__main__.Quest", "quests")
+traps = object_builder("assets/traps.json", "__main__.Trap", "traps")
+npcs = object_builder("assets/npcs.json", "__main__.Npc", "npcs")
+weapons = object_builder("assets/weapons.json", "__main__.Weapon", "weapons")
+armour = object_builder("assets/armour.json", "__main__.Armour", "armour")
+traps = object_builder("assets/traps.json", "__main__.Trap", "traps")
+quests = object_builder("assets/quests.json", "__main__.Quest", "quests")
 
-animals = object_builder("local_assets/local_enemies/animals.json", "__main__.Animal", "animals")
-hostiles = object_builder("local_assets/local_enemies/hostiles.json", "__main__.Hostile", "hostiles")
+animals = object_builder("assets/enemies/animals.json", "__main__.Animal", "animals")
+hostiles = object_builder("assets/enemies/hostiles.json", "__main__.Hostile", "hostiles")
 
 # Final list of all objects in game
 mega_list = final_object_builder(traps + npcs + animals + hostiles + weapons + armour + quests)
@@ -63,7 +69,7 @@ dweller = Player("Shane", 100, 1, 2, 1, 1, "x", "p001", ["w000", "a000"], mega_l
 mega_list[dweller.form_id] = dweller
 
 # Initial room
-room = map_maker("assets/maps.json", "square_room", mega_list)
+room = map_maker("local_assets/maps.json", "square_room", mega_list)
 room = player_placer(dweller, None, room)
 
 just_entered = True
@@ -89,7 +95,7 @@ while True:
             # room variable is now the door we used
             just_entered = True
             old_room = copy.deepcopy(room)
-            room = map_maker("assets/maps.json", room.door_to, mega_list)
+            room = map_maker("local_assets/maps.json", room.door_to, mega_list)
             room = player_placer(dweller, old_room, room)
         else:
             just_entered = False

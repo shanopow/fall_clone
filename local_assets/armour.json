@@ -1,9 +1,0 @@
-{
-    "armour" : [
-        ["Jumpsuit", "Light", 1, "A basic blue jumpsuit. Reminds you of something similar", 1, "a000"],
-        ["Doctors Coat", "Light", 1, "White lab coat worn by doctors. No oath required to wear.", 1, "a001"],
-        ["Security Suit", "Light", 3, "A protective vest over a normal, jumpsuit. Protects from punches and poor people.", 3, "a002"],
-        ["Leather Armour", "Light", 5, "Sturdy leather jacket and pants. A real crowd pleaser", 5, "a003"],
-        ["Raider Rags", "Light", 3, "Rags worn by many raiders. Not very strong.", 3, "a004"]
-    ]
-}

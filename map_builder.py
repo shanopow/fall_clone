@@ -1,5 +1,7 @@
-# Module Imports
+# File Imports
+from save_manager import *
 
+# Module Imports
 from colorama import Fore, Back, Style
 import ctypes
 import random
@@ -168,7 +170,6 @@ def vault_updater(vault, to_move, dir):
                             cell.item_at.moved = False
     return vault
 
-
 # Shows vault, ran once after each update
 def vault_shower(vault, player):
     longest = 0
@@ -243,13 +244,17 @@ def combat_manager(vault, dweller, enemy_list, player_turn):
                     print(Fore.RED + "Please enter a valid location on the body")        
             
             ret_data = dweller.attack(enemy_list[attack_choice], location_ans)
-            # WHen all enemies have been destroyed
+            # WHen an enemy has been destroyed
             if ret_data[2]:
                 enemy_remover.append(enemy_list[attack_choice])
                 enemy_list.pop(attack_choice)
+            
+            # Logs at end turn
             for log in ret_data[1]:
                 print(log)
+    
+    # Remove all enemies now
     for item in enemy_remover:
         vault[item.ypos][item.xpos].item_at = None
-    
+        file_modifier("", enemy_remover, "local_assets/maps.json", dweller.location)
     return vault
