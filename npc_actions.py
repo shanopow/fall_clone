@@ -22,7 +22,7 @@ class Npc(object):
     def set_pos(self, xpos, ypos):
         self.xpos = xpos
         self.ypos = ypos
-
+    
     def interacted(self, dweller):
         # Intro
         print(Fore.GREEN + "You are interacting with " +  self.name)
@@ -89,6 +89,42 @@ class Enemy(object):
         self.icon = holder[4]
         self.moved = False
 
+    # Checks the validity of the move we want to make
+    def move_valid(self, mdir, vault):
+        # up, down
+        count = []
+        if mdir == "w":
+            # Not at the top or xpos exist for current and above 
+            if self.ypos > 0:
+                for item in vault[self.ypos - 1]:
+                    count.append(item.xpos)
+                if self.xpos in count:
+                    if vault[self.ypos - 1][self.xpos].item_at is None:
+                        return True
+                    else:
+                        return False
+        elif mdir == "s":
+            # Above bottom, xpos exist for current and below
+            if self.ypos < len(vault) - 1:
+                for item in vault[self.ypos + 1]:
+                    count.append(item.xpos)
+                if self.xpos in count:
+                    if vault[self.ypos + 1][self.xpos].item_at is None:
+                        return True
+                    else:
+                        return False
+        # left, right
+        elif mdir == "a":
+            if self.xpos > 0:
+                if vault[self.ypos][self.xpos - 1].item_at is None:
+                    return True
+                
+        elif mdir == "d":
+            if self.xpos < len(vault[self.ypos]) - 1:
+                if vault[self.ypos][self.xpos + 1].item_at is None:
+                    return True
+                return False
+        return False
     # way this works is we check dir we want to move enemy through comparing ypos and xpos. Prefer to move across over down first.
     # Find horizontal and vertical dist between player and enemy first
     def movement(self, dweller, vault):
@@ -98,53 +134,65 @@ class Enemy(object):
             horiz_dist = horiz_dist * -1
         vert_dist = dweller.ypos - self.ypos
         if vert_dist < 0:
-            vert_dist = vert_dist * -1     
-        
+            vert_dist = vert_dist * -1
+            
         # On dead straight line with Player
         # Also includes choosing to attack
+        can_w = self.move_valid("w", vault)
+        can_a = self.move_valid("a", vault)
+        can_s = self.move_valid("s", vault)
+        can_d = self.move_valid("d", vault)
+        
         if self.xpos == dweller.xpos:
             # Check the areas above and below for a player
-            #if self.ypos == dweller.ypos - 1 or self.ypos == dweller.ypos + 1:
-            
+            # Check which directions we can move
             # Vertical
             # Try to move down
-            if self.ypos < dweller.ypos and vault[self.ypos - 1][self.xpos].icon == " ":
+            if can_s:
+                #if self.ypos < dweller.ypos and vault[self.ypos - 1][self.xpos].icon == " ":
                 vault = move_calc(vault, self, self.xpos, self.ypos + 1)
 
             # Try to move up
-            elif self.ypos > dweller.ypos and vault[self.ypos + 1][self.xpos].icon == " ": 
+            if can_w:
+                #elif self.ypos > dweller.ypos and vault[self.ypos + 1][self.xpos].icon == " ": 
                 vault = move_calc(vault, self, self.xpos, self.ypos - 1)
-        
+            
         elif self.ypos == dweller.ypos: 
             #if self.xpos == dweller.xpos - 1 or self.xpos == dweller.xpos + 1:
             # Hoizontal
             # Try to move to the Right
-            if self.xpos < dweller.xpos and vault[self.ypos][self.xpos + 1].icon == " ":
+            if can_d:
+            #if self.xpos < dweller.xpos and vault[self.ypos][self.xpos + 1].icon == " ":
                 vault = move_calc(vault, self, self.xpos + 1, self.ypos)
 
             # Try to move to the Left
-            elif self.xpos > dweller.xpos and vault[self.ypos][self.xpos - 1].icon == " ":
+            if can_a:
+            #elif self.xpos > dweller.xpos and vault[self.ypos][self.xpos - 1].icon == " ":
                 vault = move_calc(vault, self, self.xpos - 1, self.ypos + 1)
 
         # Weirder movement
         elif horiz_dist <= vert_dist:
             # Horizontal
             # Try to move to the Right
-            if self.xpos < dweller.xpos and vault[self.ypos][self.xpos + 1].icon == " ":
+            if can_d:
+            #if self.xpos < dweller.xpos and vault[self.ypos][self.xpos + 1].icon == " ":
                 vault = move_calc(vault, self, self.xpos + 1, self.ypos)
 
             # Try to move to the Left
-            elif self.xpos > dweller.xpos and vault[self.ypos][self.xpos - 1].icon == " ":
+            if can_a:
+            #elif self.xpos > dweller.xpos and vault[self.ypos][self.xpos - 1].icon == " ":
                 vault = move_calc(vault, self, self.xpos - 1, self.ypos)
 
         elif vert_dist < horiz_dist:
             # Vertical
             # Try to move down
-            if self.ypos < dweller.ypos and vault[self.ypos - 1][self.xpos].icon == " ":
+            if can_s:
+            #if self.ypos < dweller.ypos and vault[self.ypos - 1][self.xpos].icon == " ":
                 vault = move_calc(vault, self, self.xpos, self.ypos + 1)
 
             # Try to move up
-            if self.ypos > dweller.ypos and vault[self.ypos + 1][self.xpos].icon == " ": 
+            if can_w:
+            #if self.ypos > dweller.ypos and vault[self.ypos + 1][self.xpos].icon == " ": 
                 vault = move_calc(vault, self, self.xpos, self.ypos - 1)
 
         self.moved = True

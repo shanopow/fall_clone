@@ -113,7 +113,6 @@ class Player(object):
             if dam_adj > 0:
                 combat_logs.append("You hit {} for {} damage".format(target.name, str(dam_adj)))
                 target.health -= dam_adj         
-            combat_logs.append(target.health)
             
             # Check if they are destroyed
             destroyed = False
@@ -170,6 +169,7 @@ class Player(object):
                 a = input()
                 return
         else:
+            # Checks normal movement
             # up, down
             count = []
             if mdir == "w":
