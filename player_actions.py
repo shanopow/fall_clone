@@ -108,7 +108,6 @@ class Player(object):
                 # Ranged attack
                 dam = weapon_used.damage
                 dam_adj = (dam - tar_def) * lm
-            combat_logs.append(target.health)
             # Should always be true, likely useless check here
             if dam_adj > 0:
                 combat_logs.append("You hit {} for {} damage".format(target.name, str(dam_adj)))
@@ -119,8 +118,8 @@ class Player(object):
             if target.health <= 1:
                 destroyed = True
                 combat_logs.append("You have destroyed the " + target.name)
-            
-            return (deflected, combat_logs, destroyed)
+
+            return(deflected, combat_logs, destroyed)
 
     # Checks the validity of a a movement
     def move_choice(self, mdir, vault, object_list):

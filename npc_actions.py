@@ -1,5 +1,7 @@
+# File Imports
 from map_builder import move_calc, combat_manager
 
+# Module Imports
 from random import randint
 from colorama import init, Fore, Back, Style
 init(autoreset=True)
@@ -129,70 +131,60 @@ class Enemy(object):
     # Find horizontal and vertical dist between player and enemy first
     def movement(self, dweller, vault):
         # Find distance
-        horiz_dist = dweller.xpos - self.xpos
-        if horiz_dist < 0:
-            horiz_dist = horiz_dist * -1
-        vert_dist = dweller.ypos - self.ypos
+        vert_dist = self.ypos - dweller.ypos
+        horiz_dist = self.xpos - dweller.xpos
         if vert_dist < 0:
             vert_dist = vert_dist * -1
-            
+        if horiz_dist < 0:
+            horiz_dist = horiz_dist * -1
+        
         # On dead straight line with Player
         # Also includes choosing to attack
         can_w = self.move_valid("w", vault)
         can_a = self.move_valid("a", vault)
         can_s = self.move_valid("s", vault)
         can_d = self.move_valid("d", vault)
-        
-        if self.xpos == dweller.xpos:
-            # Check the areas above and below for a player
-            # Check which directions we can move
-            # Vertical
-            # Try to move down
-            if can_s:
-                #if self.ypos < dweller.ypos and vault[self.ypos - 1][self.xpos].icon == " ":
-                vault = move_calc(vault, self, self.xpos, self.ypos + 1)
 
-            # Try to move up
-            if can_w:
-                #elif self.ypos > dweller.ypos and vault[self.ypos + 1][self.xpos].icon == " ": 
-                vault = move_calc(vault, self, self.xpos, self.ypos - 1)
             
-        elif self.ypos == dweller.ypos: 
-            #if self.xpos == dweller.xpos - 1 or self.xpos == dweller.xpos + 1:
+        if self.ypos == dweller.ypos: 
             # Hoizontal
-            # Try to move to the Right
+            # Try to move to the right
             if can_d:
-            #if self.xpos < dweller.xpos and vault[self.ypos][self.xpos + 1].icon == " ":
                 vault = move_calc(vault, self, self.xpos + 1, self.ypos)
 
-            # Try to move to the Left
-            if can_a:
-            #elif self.xpos > dweller.xpos and vault[self.ypos][self.xpos - 1].icon == " ":
+            # Try to move to the left
+            elif can_a:
                 vault = move_calc(vault, self, self.xpos - 1, self.ypos + 1)
 
-        # Weirder movement
-        elif horiz_dist <= vert_dist:
-            # Horizontal
-            # Try to move to the Right
-            if can_d:
-            #if self.xpos < dweller.xpos and vault[self.ypos][self.xpos + 1].icon == " ":
-                vault = move_calc(vault, self, self.xpos + 1, self.ypos)
-
-            # Try to move to the Left
-            if can_a:
-            #elif self.xpos > dweller.xpos and vault[self.ypos][self.xpos - 1].icon == " ":
-                vault = move_calc(vault, self, self.xpos - 1, self.ypos)
-
-        elif vert_dist < horiz_dist:
+        elif self.xpos == dweller.xpos:
             # Vertical
             # Try to move down
             if can_s:
-            #if self.ypos < dweller.ypos and vault[self.ypos - 1][self.xpos].icon == " ":
                 vault = move_calc(vault, self, self.xpos, self.ypos + 1)
 
             # Try to move up
-            if can_w:
-            #if self.ypos > dweller.ypos and vault[self.ypos + 1][self.xpos].icon == " ": 
+            elif can_w:
+                vault = move_calc(vault, self, self.xpos, self.ypos - 1)
+
+        # Weirder movement
+        elif horiz_dist >= vert_dist:
+            # Horizontal
+            # Try to move to the right
+            if can_d:
+                vault = move_calc(vault, self, self.xpos + 1, self.ypos)
+
+            # Try to move to the left
+            elif can_a:
+                vault = move_calc(vault, self, self.xpos - 1, self.ypos)
+
+        elif horiz_dist < vert_dist:
+            # Vertical
+            # Try to move down
+            if can_s:
+                vault = move_calc(vault, self, self.xpos, self.ypos + 1)
+
+            # Try to move up
+            elif can_w:
                 vault = move_calc(vault, self, self.xpos, self.ypos - 1)
 
         self.moved = True
@@ -200,7 +192,7 @@ class Enemy(object):
 
     def deflect_chance(self, dweller):
         # chance of enemy dodging attack
-        armour_class = dwller.agility
+        armour_class = dweller.agility
         if dweller.equipped[1].armour_type == "medium":
             armour_class += 5
         elif dweller.equipped[1].armour_type == "heavy":
@@ -208,7 +200,7 @@ class Enemy(object):
         else:
             armour_class += 8
         
-        if random.randint(1, 75) <= armour_class:
+        if randint(1, 75) <= armour_class:
             # Will Hit
             return True
         else:
@@ -227,13 +219,36 @@ class Animal(Enemy):
         self.animal_style = holder[7]
 
     # Animals just use their basic attack stat, compared simply to player dt    
-    def attack(self, dweller):
-        # chance to hit, false if player dodges
-        go_ahead = self.deflect_chance(dweller)
-        if go_ahead:
-            labone = True     
+    def attack(self, target, location):
+        combat_logs = []
+        
+        deflected = self.deflect_chance(target)
+        if deflected:
+            combat_logs.append("You managed to dodge the attack")
+            return (deflected, combat_logs)
+        
         else:
-            return(self.name, "missed you completely!")
+            # Some vars to init for later
+            tar_def = target.equipped[1].threshold
+            if location.lower() == "head":
+                lm = 2
+            else:
+                lm = 1
+            
+            # Simple damage calculation
+            dam_adj = (self.damage - tar_def) * lm
+            
+            # Should always be true, likely useless check here
+            if dam_adj > 0:
+                combat_logs.append("You hit {} for {} damage".format(target.name, str(dam_adj)))
+                target.health -= dam_adj         
+
+            # Check if they are destroyed
+            destroyed = False
+            if target.health <= 1:
+                destroyed = True
+                combat_logs.append("You have been destroyed by " + self.name)
+            return(deflected, combat_logs, destroyed)
 
 class Hostile(Enemy):
     def __init__(self, holder):
@@ -242,11 +257,33 @@ class Hostile(Enemy):
         self.armour = holder[6]
     
     # Hostiles will use their weapon to attack enemy, weapon attack is compared to player dt
-    def attack(self):
-        # chance to hit, false if payer dodges
-        go_ahead = self.hit_chance(dweller)
-        if go_ahead:
-            # important
-            labone = True
+    def attack(self, target, location):
+        combat_logs = []
+        
+        deflected = self.deflect_chance(target)
+        if deflected:
+            combat_logs.append("You managed to dodge the attack")
+            return (deflected, combat_logs)
+        
         else:
-            return(self.name, "missed you completely!")
+            # Some vars to init for later
+            tar_def = target.armour.threshold
+            if location.lower() == "head":
+                lm = 2
+            else:
+                lm = 1
+            
+            # Simple damage calculation
+            dam_adj = (self.damage - tar_def) * lm
+            
+            # Should always be true, likely useless check here
+            if dam_adj > 0:
+                combat_logs.append("You hit {} for {} damage".format(target.name, str(dam_adj)))
+                target.health -= dam_adj         
+
+            # Check if they are destroyed
+            destroyed = False
+            if target.health <= 1:
+                destroyed = True
+                combat_logs.append("You have been destroyed by " + self.name)
+            return(deflected, combat_logs, destroyed)
