@@ -33,19 +33,18 @@ user32.ShowWindow(hWnd, SW_MAXIMISE)
 #system('cls')
 print("\033[2J")
 
-
 # Main Menu
 # For skipping
-norm_user = False
+norm_user = True
 if norm_user:
-    main_acter()
+    cont_new = main_acter()
+    # Should be expnaded to multiple saves
+    if cont_new:
+        # Set up local files 
+        file_deleter("local_assets/maps.json")
+        file_mover("assets/maps.json")
     system('cls')
     #print("\033[2J")
-
-# Set up local files 
-# MOVE INTO MAIN MENU
-file_deleter("local_assets/maps.json")
-file_mover("assets/maps.json")
 
 # Reading from the json files
 # mega_list holds each possible object in the game
@@ -71,9 +70,11 @@ mega_list[dweller.form_id] = dweller
 # Initial room
 room = map_maker("local_assets/maps.json", "square_room", mega_list)
 room = player_placer(dweller, None, room)
-
 just_entered = True
-# hard-coded ends here
+# minimap
+node_holder = []
+new_node = minimapNode(room)
+node_holder.append(new_node)
 
 # Core turn loop
 while True:
@@ -86,7 +87,7 @@ while True:
     key = key.replace("'", "")
     key = key.replace("'", "")
 
-    could_move = dweller.move_choice(key, room, mega_list)
+    could_move = dweller.move_choice(key, room, mega_list, node_holder)
     if could_move:
         # keep copy of old room if we need to use door
         room = vault_updater(room, dweller, key)
@@ -97,6 +98,16 @@ while True:
             old_room = copy.deepcopy(room)
             room = map_maker("local_assets/maps.json", room.door_to, mega_list)
             room = player_placer(dweller, old_room, room)
+            
+            # Minimap
+            new_node = minimapNode(room)
+            passed = True
+            for node in node_holder:
+                if node.doors_to == new_node.doors_to or len(new_node.doors_to) < 1:
+                    passed = False
+            if passed:
+                node_holder.append(new_node)
+            # test minimap
         else:
             just_entered = False
 

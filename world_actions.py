@@ -70,9 +70,9 @@ def main_shower():
 def main_acter():
     user_input = main_shower()
     if user_input == "1":
-        return
+        return True
     elif user_input == "2":
-        return
+        return False 
     else:
         quit()
 

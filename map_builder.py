@@ -8,6 +8,25 @@ import ctypes
 import random
 import json
 
+# A representation of a room, only contains all the doors as data so we can link them
+class minimapNode(object):
+    def __init__(self, vault):
+        self.doors_to = {}
+        count = 0
+        for line in vault:
+            for cell in line:
+                if cell.item_at != None:
+                    if cell.item_at.form_id == "d":
+                        self.current_room = cell.item_at.current_room 
+                        self.doors_to[count] = cell.item_at.door_to
+                        count += 1   
+
+    def __str__(self):
+        hold = self.current_room + ": Room\n"
+        for item in self.doors_to:
+            hold = hold + self.doors_to[item] + "\n"
+        return hold
+
 class Door(object):
     def __init__(self, xpos, ypos, door_to, current_room):
         self.xpos = xpos
@@ -215,16 +234,19 @@ def vault_shower(vault, player):
 def combat_manager(vault, dweller, enemy_list, player_turn):
     #  Show layout of combat board
     enemy_remover = []
-    counter = 0
+    player_turn = True
     while enemy_list != {}:
         print(Fore.CYAN + ("_" * 20))
         print("You can see:")
         for count, enemy in enemy_list.items():
             print(str(count) + ": ", end="")
             print(enemy)
-        if counter % 2 == 0:
+        
+        if player_turn:
+            player_turn = False
             print("Choose one to attack: ")
             chose_wrong = True
+            
             while chose_wrong:
                 try:
                     attack_choice = int(input())
@@ -237,6 +259,7 @@ def combat_manager(vault, dweller, enemy_list, player_turn):
             
             location_picked = True
             valid_locations = ["head", "left arm", "right arm", "chest", "right leg", "left leg"]
+            
             while location_picked:
                 print("Please enter where you want to hit:")
                 location_ans = input()
@@ -250,14 +273,15 @@ def combat_manager(vault, dweller, enemy_list, player_turn):
             if ret_data[2]:
                 enemy_remover.append(enemy_list[attack_choice])
                 enemy_list.pop(attack_choice)
-            counter += 1
-            
+
         else:
             # enemy turn to attack the player
             for enemy in enemy_list.values():
+                print(Fore.RED + enemy.name + " is going to attack!")
                 ret_data = enemy.attack(dweller, "body")
-            counter += 1
+            player_turn = True
         # Printing events that happened at end of turn
+        
         for log in ret_data[1]:
             print(log)
         a = input()

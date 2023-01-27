@@ -210,7 +210,6 @@ class Enemy(object):
     def __str__(self):
         return self.name
 
-
 class Animal(Enemy):
     def __init__(self, holder):
         super().__init__(holder)
@@ -242,6 +241,8 @@ class Animal(Enemy):
             if dam_adj > 0:
                 combat_logs.append("You hit {} for {} damage".format(target.name, str(dam_adj)))
                 target.health -= dam_adj         
+            else:
+                combat_logs.append("They dealt 0 damage to you!")
 
             # Check if they are destroyed
             destroyed = False
@@ -279,7 +280,10 @@ class Hostile(Enemy):
             # Should always be true, likely useless check here
             if dam_adj > 0:
                 combat_logs.append("You hit {} for {} damage".format(target.name, str(dam_adj)))
-                target.health -= dam_adj         
+                target.health -= dam_adj
+            else:
+                combat_logs.append("They dealt 0 damage to you!")
+
 
             # Check if they are destroyed
             destroyed = False

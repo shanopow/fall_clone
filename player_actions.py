@@ -122,7 +122,7 @@ class Player(object):
             return(deflected, combat_logs, destroyed)
 
     # Checks the validity of a a movement
-    def move_choice(self, mdir, vault, object_list):
+    def move_choice(self, mdir, vault, object_list, node_list):
         # User wants to quit
         if mdir == "q":
             print(Fore.RED + 'Do you want to quit? (Y\\N)')
@@ -167,6 +167,14 @@ class Player(object):
                 print("You cant equip that.")
                 a = input()
                 return
+        
+        # Showing MiniMap
+        elif mdir == "m":
+            print(Fore.GREEN + "opening MiniMap")
+            for item in node_list:
+                print(item)
+            a = input()
+
         else:
             # Checks normal movement
             # up, down
@@ -202,6 +210,5 @@ class Player(object):
                     if vault[self.ypos][self.xpos + 1].icon == " ":
                         return True
                     return False
-    
     def __str__(self):
         return "Yourself"
