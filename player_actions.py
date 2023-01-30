@@ -121,7 +121,7 @@ class Player(object):
 
             return(deflected, combat_logs, destroyed)
 
-    # Checks the validity of a a movement
+    # All player key inputs while on the main map are funnelled into here
     def move_choice(self, mdir, vault, object_list, node_list):
         # User wants to quit
         if mdir == "q":
@@ -172,7 +172,7 @@ class Player(object):
         elif mdir == "m":
             print(Fore.GREEN + "opening MiniMap")
             for item in node_list:
-                print(item)
+                item.door_shower()
             a = input()
 
         else:

@@ -103,11 +103,11 @@ while True:
             new_node = minimapNode(room)
             passed = True
             for node in node_holder:
-                if node.doors_to == new_node.doors_to or len(new_node.doors_to) < 1:
+                if node.current_room == new_node.current_room:
                     passed = False
             if passed:
                 node_holder.append(new_node)
-            # test minimap
+        
         else:
             just_entered = False
 

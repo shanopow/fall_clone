@@ -17,15 +17,18 @@ class minimapNode(object):
             for cell in line:
                 if cell.item_at != None:
                     if cell.item_at.form_id == "d":
-                        self.current_room = cell.item_at.current_room 
+                        self.current_room = cell.item_at.current_room
                         self.doors_to[count] = cell.item_at.door_to
-                        count += 1   
+                        count += 1
+                    # for catching the doors under the player when he moves into the room
+                    elif cell.second_holder != None:
+                       self.current_room = cell.second_holder.current_room
+                       self.doors_to[count] = cell.second_holder.door_to
+                       count += 1    
 
-    def __str__(self):
-        hold = self.current_room + ": Room\n"
-        for item in self.doors_to:
-            hold = hold + self.doors_to[item] + "\n"
-        return hold
+    def door_shower(self):
+        print("\n" + self.current_room + ": ")
+        print(self.doors_to)
 
 class Door(object):
     def __init__(self, xpos, ypos, door_to, current_room):
