@@ -9,7 +9,7 @@ import random
 import json
 
 # A representation of a room, only contains all the doors as data so we can link them
-class minimapNode(object):
+""" class minimapNode(object):
     def __init__(self, vault):
         self.doors_to = {}
         count = 0
@@ -28,7 +28,7 @@ class minimapNode(object):
                        self.current_room = cell.second_holder.current_room
                        self.doors_to[count] = cell.second_holder.door_to + ":" + dir
                        count += 1    
-
+ 
     # give a facing direction for each door in the node
     # used for drawing the minimap                    
     def dir_setter(self, line, cell):
@@ -62,6 +62,7 @@ def minimap_piecer(node_list):
                 node_rep[2] = ["  |"]
         for line in node_rep:
             print("".join(line))
+"""
 
 class Door(object):
     def __init__(self, xpos, ypos, door_to, current_room):

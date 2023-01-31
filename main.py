@@ -66,13 +66,14 @@ mega_list = final_object_builder(traps + npcs + animals + hostiles + weapons + a
 dweller = Player("Shane", 100, 1, 2, 1, 1, "x", "p001", ["w000", "a000"], mega_list, [5,5,5,5,5,5,5])
 mega_list[dweller.form_id] = dweller
 # Initial room
-room = map_maker("local_assets/maps.json", "square room", "vault1", mega_list)
+curr_area = "vault1"
+room = map_maker("local_assets/maps.json", "square room", curr_area, mega_list)
 room = player_placer(dweller, None, room)
 just_entered = True
 # minimap
 node_holder = []
-new_node = minimapNode(room)
-node_holder.append(new_node)
+#new_node = minimapNode(room)
+#node_holder.append(new_node)
 
 # Core turn loop
 while True:
@@ -94,18 +95,25 @@ while True:
             # room variable is now the door we used
             just_entered = True
             old_room = copy.deepcopy(room)
-            room = map_maker("local_assets/maps.json", room.door_to, "vault1", mega_list)
+            # moving to another area
+            if "," in room.door_to:
+                curr_area = room.door_to.split(",")
+                next_room = curr_area[1]
+                curr_area = curr_area[0]
+                old_room = None
+            else:
+                next_room = room.door_to
+            room = map_maker("local_assets/maps.json", next_room, curr_area, mega_list)
             room = player_placer(dweller, old_room, room)
-
             # Minimap
-            new_node = minimapNode(room)
+            """new_node = minimapNode(room)
             passed = True
             for node in node_holder:
                 if node.current_room == new_node.current_room:
                     passed = False
             if passed:
                 node_holder.append(new_node)
-        
+            """        
         else:
             just_entered = False
 

@@ -1,12 +1,8 @@
-# COMMENTS ABOUT THE JSON FILES AND THEIR STRUCTURE GO HERE
-#
 # structure of maps.json is very important
 # first, we must group by area, each map falling under an area
 # second, the ordering of maps within the area is VERY IMPORTANT
 # they should be ordered accoring to the minmap reader so it can gernerate the minmap
 # typically, this means organise the first one to be the room in the top left corner and work from there
-
-
 
 # This file is responsible for reading in from our json file and building our objects or maps
 # basically takes functions from map_builder and works with them here
@@ -44,6 +40,12 @@ def map_maker(file_name, chosen, curr_area, object_list):
             return start_room
     print("Could not find this map, exiting now")
     quit()
+
+# Function for joining together nodes as a minimap
+def minimap_builder(curr_area):
+    f = open(file_name)
+    for room in area:
+        pass
 
 # for converting name of class in str to actual class, used in normal object builder, DO NOT USE ALONE
 def get_class(kls):
