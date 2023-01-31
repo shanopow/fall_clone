@@ -17,18 +17,51 @@ class minimapNode(object):
             for cell in line:
                 if cell.item_at != None:
                     if cell.item_at.form_id == "d":
+                        dir = self.dir_setter(line, cell)
                         self.current_room = cell.item_at.current_room
-                        self.doors_to[count] = cell.item_at.door_to
+                        self.doors_to[count] = cell.item_at.door_to + ":" + dir
                         count += 1
+                    
                     # for catching the doors under the player when he moves into the room
                     elif cell.second_holder != None:
+                       dir = self.dir_setter(line, cell)   
                        self.current_room = cell.second_holder.current_room
-                       self.doors_to[count] = cell.second_holder.door_to
+                       self.doors_to[count] = cell.second_holder.door_to + ":" + dir
                        count += 1    
+
+    # give a facing direction for each door in the node
+    # used for drawing the minimap                    
+    def dir_setter(self, line, cell):
+        if cell.xpos == 0:
+            dir = "a"
+        elif cell.ypos == 0:
+            dir = "w"
+        elif cell.xpos == len(line) - 1:
+            dir = "d"
+        else:
+            dir = "s"
+        return dir
 
     def door_shower(self):
         print("\n" + self.current_room + ": ")
         print(self.doors_to)
+
+# Function for pieceing together a relational minimap using the minmap Nodes
+def minimap_piecer(node_list):
+    for item in node_list:
+        node_rep = [[],["0"],[]]
+        for door in item.doors_to.values():
+            # add the lines
+            if door[-1] == "a":
+                node_rep[1].insert(0, "--")
+            elif door[-1] == "d":
+                node_rep[1].append("--")
+            elif door[-1] == "w":
+                node_rep[0] = ["  |"]
+            elif door[-1] == "s":
+                node_rep[2] = ["  |"]
+        for line in node_rep:
+            print("".join(line))
 
 class Door(object):
     def __init__(self, xpos, ypos, door_to, current_room):
@@ -38,7 +71,7 @@ class Door(object):
         self.icon = "D"
         self.current_room = current_room
         self.form_id = "d"
-    
+
     def __str__(self):
         return ("Door to " + self.door_to)
 

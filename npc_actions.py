@@ -101,32 +101,35 @@ class Enemy(object):
                 for item in vault[self.ypos - 1]:
                     count.append(item.xpos)
                 if self.xpos in count:
-                    if vault[self.ypos - 1][self.xpos].item_at is None:
+                    if vault[self.ypos - 1][self.xpos].item_at is None and vault[self.ypos - 1][self.xpos].icon == " ":
                         return True
                     else:
                         return False
+        
         elif mdir == "s":
             # Above bottom, xpos exist for current and below
             if self.ypos < len(vault) - 1:
                 for item in vault[self.ypos + 1]:
                     count.append(item.xpos)
                 if self.xpos in count:
-                    if vault[self.ypos + 1][self.xpos].item_at is None:
+                    if vault[self.ypos + 1][self.xpos].item_at is None and vault[self.ypos - 1][self.xpos].icon == " ":
                         return True
                     else:
                         return False
+        
         # left, right
         elif mdir == "a":
             if self.xpos > 0:
-                if vault[self.ypos][self.xpos - 1].item_at is None:
+                if vault[self.ypos][self.xpos - 1].item_at is None and vault[self.ypos - 1][self.xpos].icon == " ":
                     return True
-                
+        
         elif mdir == "d":
             if self.xpos < len(vault[self.ypos]) - 1:
-                if vault[self.ypos][self.xpos + 1].item_at is None:
+                if vault[self.ypos][self.xpos + 1].item_at is None and vault[self.ypos - 1][self.xpos].icon == " ":
                     return True
                 return False
         return False
+    
     # way this works is we check dir we want to move enemy through comparing ypos and xpos. Prefer to move across over down first.
     # Find horizontal and vertical dist between player and enemy first
     def movement(self, dweller, vault):

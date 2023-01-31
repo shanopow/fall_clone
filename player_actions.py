@@ -1,9 +1,13 @@
+# File imports
+from map_builder import *
 from json_handler import map_maker
+
+# Moduel Imports
 from colorama import Fore, Back, Style
 from getch import getch
-
 import random
 import copy
+
 
 class Player(object):
     def __init__(self, name, health, xp, rads, xpos, ypos, icon, form_id, inventory, item_list, special):
@@ -171,8 +175,7 @@ class Player(object):
         # Showing MiniMap
         elif mdir == "m":
             print(Fore.GREEN + "opening MiniMap")
-            for item in node_list:
-                item.door_shower()
+            minimap_piecer(node_list)
             a = input()
 
         else:

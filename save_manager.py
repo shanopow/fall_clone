@@ -9,6 +9,7 @@ def file_collector(rel_path):
         if os.path.isfile(f):
             file_mover(f)
 
+
 def file_mover(f):
     dest = "local_" + f
     a = dest.split('/')
@@ -27,12 +28,12 @@ def file_modifier(save_prefix, to_modify, file, map_location):
     file = save_prefix + file
     f = open(file)
     raw = json.load(f)
-    found_it = raw[map_location]["enemies"]
+    found_it = raw["vault1"][map_location]["enemies"]
     #print(found_it.items())
     for item in to_modify:
         if item.form_id in found_it.values():
             found_it.pop(list(found_it.keys())[list(found_it.values()).index(item.form_id)])
     # save the modified file
-    raw[map_location]["enemies"] = found_it
+    raw["vault1"][map_location]["enemies"] = found_it
     out = open(file, "w")
     json.dump(raw, out, indent=1)

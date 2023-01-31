@@ -1,12 +1,12 @@
 # Not all here are needed, this is to keep track of all needed modules across entre program
 
 # File imports
-from map_builder import *
 from player_actions import *
 from npc_actions import *
 from world_actions import *
 from json_handler import *
 from save_manager import *
+from map_builder import *
 
 # Module imports
 from os import system, name
@@ -30,9 +30,8 @@ hWnd = user32.GetForegroundWindow()
 user32.ShowWindow(hWnd, SW_MAXIMISE)
 
 # Clearing Option
-#system('cls')
-print("\033[2J")
-
+system('cls')
+#print("\033[2J")
 # Main Menu
 # For skipping
 norm_user = True
@@ -66,9 +65,8 @@ mega_list = final_object_builder(traps + npcs + animals + hostiles + weapons + a
 # Player
 dweller = Player("Shane", 100, 1, 2, 1, 1, "x", "p001", ["w000", "a000"], mega_list, [5,5,5,5,5,5,5])
 mega_list[dweller.form_id] = dweller
-
 # Initial room
-room = map_maker("local_assets/maps.json", "square_room", mega_list)
+room = map_maker("local_assets/maps.json", "square room", "vault1", mega_list)
 room = player_placer(dweller, None, room)
 just_entered = True
 # minimap
@@ -96,9 +94,9 @@ while True:
             # room variable is now the door we used
             just_entered = True
             old_room = copy.deepcopy(room)
-            room = map_maker("local_assets/maps.json", room.door_to, mega_list)
+            room = map_maker("local_assets/maps.json", room.door_to, "vault1", mega_list)
             room = player_placer(dweller, old_room, room)
-            
+
             # Minimap
             new_node = minimapNode(room)
             passed = True

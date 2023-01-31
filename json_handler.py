@@ -1,9 +1,21 @@
+# COMMENTS ABOUT THE JSON FILES AND THEIR STRUCTURE GO HERE
+#
+# structure of maps.json is very important
+# first, we must group by area, each map falling under an area
+# second, the ordering of maps within the area is VERY IMPORTANT
+# they should be ordered accoring to the minmap reader so it can gernerate the minmap
+# typically, this means organise the first one to be the room in the top left corner and work from there
+
+
+
 # This file is responsible for reading in from our json file and building our objects or maps
 # basically takes functions from map_builder and works with them here
 
-import json
+# File imports 
 from map_builder import norm_builder, door_maker, vault_sprinkler
 from world_actions import populater
+# Moduele imports
+import json
 
 def file_reader(file_name):
     f = open(file_name)
@@ -13,19 +25,20 @@ def file_reader(file_name):
 
 # reads in every map in the json, keeps them seperated
 # only chooses one it wants
-def map_maker(file_name, chosen, object_list):
+def map_maker(file_name, chosen, curr_area, object_list):
     to_build = []
     data = file_reader(file_name)
-    for item in data:
+    area = data[curr_area]
+    for item in area:
         if item == chosen:
-            room = data[chosen]
+            room = area[chosen]
             # make dimensions here
             start_room = norm_builder(room["dimensions"])        
             # here we make list of items to sprinkle onto the map
             details = []
             details = populater(details, room["people"], object_list)
             details = populater(details, room["enemies"], object_list)
-            # add dorrs on
+            # add doors on
             details = door_maker(details, room["doors"], start_room, chosen)
             vault_sprinkler(details, start_room)
             return start_room
