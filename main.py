@@ -13,12 +13,17 @@ from os import system, name
 from colorama import init, Fore, Back, Style
 from getch import getch
 
-from random import randint
 import ctypes
-import time
-import sys
-import json
 import copy
+
+# keylooker
+def key_looker():
+    key = getch()
+    key = str(key)
+    key = key.replace("b", "")
+    key = key.replace("'", "")
+    key = key.replace("'", "")
+    return key
 
 # Colorama
 init(autoreset=True)
@@ -79,19 +84,15 @@ node_holder = []
 while True:
     if just_entered:
         player_sight(room)
+    key = key_looker()
     vault_shower(room, dweller)
-    key = getch()
-    key = str(key)
-    key = key.replace("b", "")
-    key = key.replace("'", "")
-    key = key.replace("'", "")
-
+    
     could_move = dweller.move_choice(key, room, mega_list, node_holder)
     if could_move:
         # keep copy of old room if we need to use door
         room = vault_updater(room, dweller, key)
         if "list" not in str(type(room)):
-            # door used
+            # door used as we didnt get the vault back
             # room variable is now the door we used
             just_entered = True
             old_room = copy.deepcopy(room)
@@ -113,7 +114,7 @@ while True:
                     passed = False
             if passed:
                 node_holder.append(new_node)
-            """        
+            """   
         else:
             just_entered = False
 

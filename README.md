@@ -3,7 +3,7 @@ This is a weird project, essentially a clone of fallout 1 but just stripped to i
 Made just to see how to manage a large clump of different files and systems stuck together.
 
 Implemented in python, with some json for storage and only a few non-standard dependencies. (e.g. getch, colorama).
-All imports needed listed in main.py.
+All imports listed in requirements.txt.
 
 # To-Do
 A few little tasks I want to implement still.

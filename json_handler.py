@@ -60,15 +60,10 @@ def get_class(kls):
 def object_builder(file_name, class_type, keyword):
     data = file_reader(file_name)
     D = get_class(class_type)
-    big = []
-    for item in data[keyword]:
-        adder = D(item)
-        big.append(adder)
+    big = [for D(item) in data[keyword]]
     return big
 
 # For creating the megalist of objects to index to quickly access
 def final_object_builder(mashed_list):
-    final_dict = {}
-    for item in mashed_list:
-        final_dict[item.form_id] = item
+    final_dict = {item.form_id: item for item in mashed_list}
     return final_dict
