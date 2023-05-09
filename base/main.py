@@ -1,4 +1,4 @@
-# Not all here are needed, this is to keep track of all needed modules across entre program
+# Not all here are needed, this is to keep track of all needed modules across entire program
 
 # File imports
 from player_actions import *
@@ -37,6 +37,7 @@ user32.ShowWindow(hWnd, SW_MAXIMISE)
 # Clearing Option
 system('cls')
 #print("\033[2J")
+
 # Main Menu
 # For skipping
 norm_user = True
@@ -119,4 +120,4 @@ while True:
             just_entered = False
 
     #system('cls')
-    print("\033[2J")
+    #print("\033[2J")

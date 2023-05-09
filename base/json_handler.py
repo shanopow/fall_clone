@@ -60,7 +60,10 @@ def get_class(kls):
 def object_builder(file_name, class_type, keyword):
     data = file_reader(file_name)
     D = get_class(class_type)
-    big = [for D(item) in data[keyword]]
+    big = []
+    for item in data[keyword]:
+        adder = D(item)
+        big.append(adder)
     return big
 
 # For creating the megalist of objects to index to quickly access
